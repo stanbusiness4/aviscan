@@ -12,6 +12,7 @@ module.exports = async function handler(req, res) {
   try {
     const { vetSearch, city, country } = req.body;
 
+    // ── VET SEARCH MODE (Haiku, fast, ~0.03$/search) ──
     if (vetSearch && country && city) {
       const r = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
