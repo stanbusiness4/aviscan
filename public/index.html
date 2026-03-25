@@ -428,55 +428,6 @@ text-decoration: none; -webkit-tap-highlight-color: transparent;
 .nav-item .nav-label { font-weight: 600; }
 .container { padding-bottom: 100px !important; }
 
-/* ═══ PHOTO DIAGNOSTIC ═══ */
-.photo-zone {
-border: 3px dashed var(--border); border-radius: 16px; padding: 40px 20px;
-text-align: center; cursor: pointer; transition: all 0.3s; background: var(--card);
-}
-.photo-zone:hover, .photo-zone.dragover { border-color: var(--primary); background: var(--primary-pale); }
-.photo-zone .pz-icon { font-size: 48px; margin-bottom: 12px; }
-.photo-zone p { color: var(--text-mid); font-size: 14px; }
-.photo-zone small { color: var(--text-light); font-size: 12px; }
-
-.photo-grid {
-display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px;
-}
-
-.photo-thumb {
-position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 1;
-box-shadow: var(--shadow); border: 2px solid var(--border);
-}
-.photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.photo-thumb .remove-photo {
-position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.7);
-color: #fff; border: none; border-radius: 50%; width: 26px; height: 26px;
-cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center;
-transition: background 0.2s;
-}
-.photo-thumb .remove-photo:hover { background: var(--danger); }
-.photo-thumb .photo-num {
-position: absolute; bottom: 6px; left: 6px; background: rgba(0,0,0,0.6);
-color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 50px;
-}
-
-.photo-add-btn {
-border: 3px dashed var(--border); border-radius: 12px; aspect-ratio: 1;
-display: flex; flex-direction: column; align-items: center; justify-content: center;
-cursor: pointer; transition: all 0.2s; background: var(--bg); gap: 4px;
-font-family: inherit; color: var(--text-light); font-size: 12px;
-}
-.photo-add-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-pale); }
-.photo-add-btn .add-icon { font-size: 28px; }
-
-.photo-counter {
-text-align: center; font-size: 13px; color: var(--text-light); margin-bottom: 12px; font-weight: 600;
-}
-
-.photo-ai-result {
-background: var(--card); border-radius: var(--radius); padding: 24px;
-box-shadow: var(--shadow); border: 1px solid var(--border); margin-top: 16px;
-}
-
 /* ═══ VACCINATION CALENDAR ═══ */
 .vax-timeline { position: relative; padding-left: 30px; }
 .vax-timeline::before {
@@ -858,7 +809,7 @@ font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s;
 <div class="onb-slide" id="onbSlide2">
 <div class="onb-icon">&#128269;</div>
 <div class="onb-title">&#201;tape 2 : S&#233;lectionnez les sympt&#244;mes</div>
-<div class="onb-desc">Cochez tous les signes que vous observez chez vos poulets malades. Conseil : s&#233;lectionnez au moins 4-5 sympt&#244;mes pour un diagnostic fiable. Vous pouvez aussi envoyer des photos.</div>
+<div class="onb-desc">Cochez tous les signes que vous observez chez vos poulets malades. Conseil : s&#233;lectionnez au moins 4-5 sympt&#244;mes pour un diagnostic fiable. Utilisez les cat&#233;gories pour trouver plus vite.</div>
 </div>
 <div class="onb-slide" id="onbSlide3">
 <div class="onb-icon">&#128138;</div>
@@ -909,14 +860,6 @@ font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s;
 <div class="payment-feature">
 <div class="pf-icon">💊</div>
 <div><strong>Traitements complets</strong> — Remèdes bio + médicaments vétérinaires avec posologies détaillées</div>
-</div>
-<div class="payment-feature">
-<div class="pf-icon">🔬</div>
-<div><strong>Trouver mes médicaments</strong> — Médicaments disponibles dans votre localité avec prix et points de vente</div>
-</div>
-<div class="payment-feature">
-<div class="pf-icon">📸</div>
-<div><strong>Diagnostic par photo</strong> — Prenez une photo, l'IA identifie la maladie</div>
 </div>
 <div class="payment-feature">
 <div class="pf-icon">📅</div>
@@ -1256,47 +1199,7 @@ En attendant, l'app fonctionne en <strong>mode démo</strong> (tout email est ac
 <!-- STEP 2: DIAGNOSTIC (Photos + Symptômes fusionnés) -->
 <div class="section" id="section-1">
 <h2 class="section-title">🔍 Diagnostic de vos poulets</h2>
-<p class="section-sub">Ajoutez des photos et/ou sélectionnez les symptômes observés pour obtenir un diagnostic précis.</p>
-
-<!-- SECTION PHOTO (Premium) -->
-<div style="background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:20px;backdrop-filter:blur(10px);position:relative;" id="photoSection">
-<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-<h3 style="font-size:15px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:8px;">📸 Ajouter des photos <span style="font-size:10px;font-weight:800;background:linear-gradient(135deg,#E8872A,#F5B041);color:#fff;padding:2px 8px;border-radius:4px;">PREMIUM</span></h3>
-<span style="font-size:12px;color:var(--text-light);" id="photoCounterInline">0 / 5</span>
-</div>
-
-<div id="photoSectionContent">
-<!-- Non-abonné: message verrouillé -->
-<div id="photoLocked" style="display:none;">
-<div style="text-align:center;padding:20px;background:var(--bg);border-radius:12px;border:2px dashed var(--border);">
-<div style="font-size:32px;margin-bottom:8px;">🔒</div>
-<p style="font-size:13px;color:var(--text-mid);margin-bottom:12px;">Ajoutez jusqu'à 5 photos pour un diagnostic plus précis</p>
-<button class="btn btn-primary" onclick="openPaymentModal()" style="font-size:13px;padding:8px 20px;">🌾 Débloquer avec Premium</button>
-</div>
-</div>
-
-<!-- Abonné: zone d'upload -->
-<div id="photoUnlocked" style="display:none;">
-<div id="photoZone" class="photo-zone" onclick="document.getElementById('photoInput').click()"
-ondragover="event.preventDefault();this.classList.add('dragover')"
-ondragleave="this.classList.remove('dragover')"
-ondrop="event.preventDefault();this.classList.remove('dragover');handlePhotoDrop(event)"
-style="padding:20px 16px;">
-<div class="pz-icon" style="font-size:36px;margin-bottom:8px;">📷</div>
-<p style="font-size:13px;"><strong>Cliquez pour prendre ou importer des photos</strong></p>
-<small>JPG, PNG — max 10 Mo — jusqu'à 5 photos</small>
-<input type="file" id="photoInput" accept="image/*" capture="environment" multiple style="display:none" onchange="handlePhotoSelect(event)">
-</div>
-
-<div id="photoPreviewArea" style="display:none;">
-<div class="photo-counter" id="photoCounter">0 / 5 photos</div>
-<div class="photo-grid" id="photoGrid"></div>
-</div>
-</div>
-</div>
-
-<div id="photoResult" style="margin-top:12px;"></div>
-</div>
+<p class="section-sub">Sélectionnez les symptômes observés pour obtenir un diagnostic précis.</p>
 
 <!-- SECTION SYMPTÔMES -->
 <h3 style="font-size:15px;font-weight:700;color:var(--primary);margin-bottom:12px;display:flex;align-items:center;gap:8px;">🩺 Sélectionnez les symptômes <span style="font-size:10px;font-weight:800;background:var(--primary-pale);color:var(--primary);padding:2px 8px;border-radius:4px;">GRATUIT</span></h3>
@@ -1623,7 +1526,7 @@ style="padding:20px 16px;">
 </div>
 <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg);border-radius:10px;">
 <div style="width:32px;height:32px;min-width:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">2</div>
-<div><strong style="font-size:14px;">📸 Diagnostic par photo</strong><p style="font-size:13px;color:var(--text-mid);margin-top:4px;">Prenez jusqu'à 5 photos de vos poulets malades. L'application analyse les symptômes visibles et propose un diagnostic.</p></div>
+<div><strong style="font-size:14px;">📍 Annuaire vétérinaire</strong><p style="font-size:13px;color:var(--text-mid);margin-top:4px;">Recherchez les vétérinaires et pharmacies vétérinaires dans votre ville pour obtenir des médicaments et des conseils professionnels.</p></div>
 </div>
 <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg);border-radius:10px;">
 <div style="width:32px;height:32px;min-width:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">3</div>
@@ -1635,7 +1538,7 @@ style="padding:20px 16px;">
 </div>
 <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg);border-radius:10px;">
 <div style="width:32px;height:32px;min-width:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">5</div>
-<div><strong style="font-size:14px;">📍 Trouver mes médicaments</strong><p style="font-size:13px;color:var(--text-mid);margin-top:4px;">Dans les résultats du diagnostic, cliquez sur cet onglet pour rechercher les médicaments disponibles dans votre ville avec les prix.</p></div>
+<div><strong style="font-size:14px;">📍 Annuaire vétérinaire</strong><p style="font-size:13px;color:var(--text-mid);margin-top:4px;">Recherchez les vétérinaires et pharmacies vétérinaires dans votre ville pour obtenir des médicaments et des conseils professionnels.</p></div>
 </div>
 <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg);border-radius:10px;">
 <div style="width:32px;height:32px;min-width:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">6</div>
@@ -1684,9 +1587,9 @@ Développée par <strong>HORIZON AGRO-PASTORAL</strong>, AviaScan met la technol
 <div style="font-size:11px;color:#4A5568;margin-top:2px;">20+ maladies, 93 symptômes</div>
 </div>
 <div style="background:rgba(255,255,255,0.7);border-radius:10px;padding:12px;text-align:center;">
-<div style="font-size:22px;margin-bottom:4px;">📸</div>
-<div style="font-size:12px;font-weight:700;color:var(--primary);">Analyse par photo</div>
-<div style="font-size:11px;color:#4A5568;margin-top:2px;">Jusqu'à 5 photos analysées</div>
+<div style="font-size:22px;margin-bottom:4px;">💉</div>
+<div style="font-size:12px;font-weight:700;color:var(--primary);">Calendrier vaccinal</div>
+<div style="font-size:11px;color:#4A5568;margin-top:2px;">4 types d'élevage couverts</div>
 </div>
 <div style="background:rgba(255,255,255,0.7);border-radius:10px;padding:12px;text-align:center;">
 <div style="font-size:22px;margin-bottom:4px;">🌿</div>
@@ -1718,7 +1621,7 @@ Développée par <strong>HORIZON AGRO-PASTORAL</strong>, AviaScan met la technol
 
 <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:var(--bg);border-radius:12px;border-left:3px solid var(--primary);">
 <div style="width:36px;height:36px;min-width:36px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;">2</div>
-<div><strong style="font-size:14px;color:var(--text);">S&#233;lectionnez les sympt&#244;mes observ&#233;s</strong><p style="font-size:12px;color:var(--text-mid);margin-top:4px;line-height:1.6;">Cochez <strong>au moins 4-5 sympt&#244;mes</strong> que vous observez chez vos poulets malades. Utilisez les cat&#233;gories (Respiratoire, Digestif, Nerveux...) pour trouver plus vite. Les abonn&#233;s peuvent aussi envoyer jusqu'&#224; 5 photos.</p></div>
+<div><strong style="font-size:14px;color:var(--text);">S&#233;lectionnez les sympt&#244;mes observ&#233;s</strong><p style="font-size:12px;color:var(--text-mid);margin-top:4px;line-height:1.6;">Cochez <strong>au moins 4-5 sympt&#244;mes</strong> que vous observez chez vos poulets malades. Utilisez les cat&#233;gories (Respiratoire, Digestif, Nerveux...) pour trouver plus vite. Plus vous &#234;tes pr&#233;cis, plus le diagnostic est fiable.</p></div>
 </div>
 
 <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:var(--bg);border-radius:12px;border-left:3px solid var(--primary);">
@@ -1728,7 +1631,7 @@ Développée par <strong>HORIZON AGRO-PASTORAL</strong>, AviaScan met la technol
 
 <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:var(--bg);border-radius:12px;border-left:3px solid var(--primary);">
 <div style="width:36px;height:36px;min-width:36px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;">4</div>
-<div><strong style="font-size:14px;color:var(--text);">Appliquez les traitements</strong><p style="font-size:12px;color:var(--text-mid);margin-top:4px;line-height:1.6;">Choisissez entre rem&#232;des naturels (gratuit) et m&#233;dicaments v&#233;t&#233;rinaires (abonn&#233;s). L'onglet "Trouver mes m&#233;dicaments" recherche les m&#233;dicaments adapt&#233;s &#224; la maladie avec leur nom, posologie et dur&#233;e, puis vous indique o&#249; les acheter pr&#232;s de chez vous avec les prix.</p></div>
+<div><strong style="font-size:14px;color:var(--text);">Appliquez les traitements</strong><p style="font-size:12px;color:var(--text-mid);margin-top:4px;line-height:1.6;">Choisissez entre rem&#232;des naturels (gratuit) et m&#233;dicaments v&#233;t&#233;rinaires (abonn&#233;s) avec les posologies d&#233;taill&#233;es adapt&#233;es &#224; votre contexte.</p></div>
 </div>
 
 <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:var(--bg);border-radius:12px;border-left:3px solid var(--primary);">
@@ -1747,7 +1650,7 @@ Développée par <strong>HORIZON AGRO-PASTORAL</strong>, AviaScan met la technol
 <h3 style="font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:12px;color:var(--primary);">&#x1F512; Gratuit vs Premium</h3>
 <div style="display:grid;gap:8px;font-size:13px;">
 <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#E8F5E9;border-radius:8px;"><span style="font-size:16px;">&#x2705;</span><span style="color:#1B5E20;"><strong>Gratuit :</strong> Diagnostic par sympt&#244;mes, Calendrier vaccinal, Quiz avicole (350 questions), Guide de l'&#233;leveur, Tutoriel</span></div>
-<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FFF3E0;border-radius:8px;"><span style="font-size:16px;">&#x2B50;</span><span style="color:#85500B;"><strong>Premium :</strong> Traitements d&#233;taill&#233;s (bio + v&#233;to), Analyse par photo, Trouver mes m&#233;dicaments, Calculateur de rentabilit&#233;, Annuaire v&#233;t&#233;rinaire</span></div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FFF3E0;border-radius:8px;"><span style="font-size:16px;">&#x2B50;</span><span style="color:#85500B;"><strong>Premium :</strong> Traitements d&#233;taill&#233;s (bio + v&#233;to), Calculateur de rentabilit&#233;, Annuaire v&#233;t&#233;rinaire</span></div>
 </div>
 </div>
 
@@ -1871,7 +1774,7 @@ Nous écrire sur WhatsApp
 </div>
 
 <p style="font-weight:700;color:var(--primary);margin-bottom:6px;">1. Nature du service</p>
-<p style="margin-bottom:14px;">AviaScan est une application web développée par HORIZON AGRO-PASTORAL, basée au Bénin. Elle fournit des suggestions de diagnostic basées sur les symptômes renseignés par l'utilisateur et/ou sur l'analyse de photos. Les résultats sont générés à titre informatif et éducatif uniquement.</p>
+<p style="margin-bottom:14px;">AviaScan est une application web développée par HORIZON AGRO-PASTORAL, basée au Bénin. Elle fournit des suggestions de diagnostic basées sur les symptômes renseignés par l'utilisateur. Les résultats sont générés à titre informatif et éducatif uniquement.</p>
 
 <p style="font-weight:700;color:var(--primary);margin-bottom:6px;">2. Limitation de responsabilité</p>
 <p style="margin-bottom:14px;">HORIZON AGRO-PASTORAL et AviaScan déclinent toute responsabilité en cas de pertes animales, de dommages économiques ou de tout préjudice direct ou indirect résultant de l'utilisation des informations fournies par l'application. Les diagnostics proposés sont des probabilités et non des certitudes. Les traitements suggérés (bio, naturels ou vétérinaires) doivent toujours être validés par un professionnel de santé animale avant application. L'utilisateur assume l'entière responsabilité des décisions prises sur la base des informations fournies.</p>
@@ -1880,10 +1783,10 @@ Nous écrire sur WhatsApp
 <p style="margin-bottom:14px;">Les informations sur les maladies, traitements et posologies proviennent de sources vétérinaires reconnues et de la littérature avicole scientifique. Cependant, elles peuvent ne pas être à jour ou ne pas correspondre aux réalités locales spécifiques de chaque élevage. Les prix des médicaments et leur disponibilité varient selon les pays et les périodes. AviaScan ne garantit pas l'exactitude, l'exhaustivité ou l'actualité de ces informations.</p>
 
 <p style="font-weight:700;color:var(--primary);margin-bottom:6px;">4. Utilisation des données personnelles</p>
-<p style="margin-bottom:14px;">AviaScan collecte uniquement l'adresse email des abonnés à des fins d'authentification. Aucune donnée de diagnostic, photo ou information d'élevage n'est stockée sur nos serveurs de manière permanente. Les photos envoyées pour analyse sont traitées en temps réel et ne sont pas conservées. Nous ne partageons aucune donnée personnelle avec des tiers.</p>
+<p style="margin-bottom:14px;">AviaScan collecte uniquement l'adresse email des abonnés à des fins d'authentification. Aucune donnée de diagnostic ou information d'élevage n'est stockée sur nos serveurs de manière permanente. Nous ne partageons aucune donnée personnelle avec des tiers.</p>
 
 <p style="font-weight:700;color:var(--primary);margin-bottom:6px;">5. Abonnement et paiement</p>
-<p style="margin-bottom:14px;">L'accès aux fonctionnalités premium (traitements détaillés, analyse par photo, calculateur de rentabilité, quiz, annuaire vétérinaire) est soumis à un abonnement mensuel payant. L'abonnement est valable pour la durée indiquée lors du paiement. À l'expiration, l'accès aux fonctionnalités premium est automatiquement suspendu. Aucun remboursement n'est effectué pour les abonnements en cours. Le renouvellement se fait par un nouveau paiement.</p>
+<p style="margin-bottom:14px;">L'accès aux fonctionnalités premium (traitements détaillés, calculateur de rentabilité, annuaire vétérinaire) est soumis à un abonnement payant. L'abonnement est valable pour la durée indiquée lors du paiement. À l'expiration, l'accès aux fonctionnalités premium est automatiquement suspendu. Aucun remboursement n'est effectué pour les abonnements en cours. Le renouvellement se fait par un nouveau paiement.</p>
 
 <p style="font-weight:700;color:var(--primary);margin-bottom:6px;">6. Propriété intellectuelle</p>
 <p style="margin-bottom:14px;">L'ensemble du contenu de l'application AviaScan (textes, base de données, algorithmes de diagnostic, design, code source) est la propriété exclusive de HORIZON AGRO-PASTORAL. Toute reproduction, copie, modification ou redistribution, totale ou partielle, sans autorisation écrite préalable, est strictement interdite.</p>
@@ -2239,7 +2142,7 @@ if(!IS_CONFIGURED) document.getElementById('configBanner').style.display = 'bloc
 const saved = sessionStorage.getItem('hap_auth');
 if(saved) { isAuthenticated = true; currentAuthEmail = saved; updateAuthBadge(); checkAuthStillValid(); }
 renderCategoryButtons(); renderSymptoms();
-updatePhotoSectionVisibility();
+
 setInterval(checkAuthStillValid, 120000);
 fetchFromGoogleSheet().then(() => { updateVideoEmbed(); updateAnnonce(); updateTestimonials(); generateQR(); updateSubPrices(); });
 
@@ -2370,7 +2273,7 @@ isAuthenticated = false;
 currentAuthEmail = '';
 sessionStorage.removeItem('hap_auth');
 updateAuthBadge();
-updatePhotoSectionVisibility();
+
 if(currentStep === 2 && currentPage === 'diagnostic') runDiagnosis();
 
 // Notification avec bouton renouveler
@@ -2756,7 +2659,7 @@ showMsg('authSuccess1','✅ Email vérifié ! Accès aux traitements activé.');
 }
 btn.innerHTML='🔓 Vérifier et débloquer'; btn.disabled=false;
 
-setTimeout(() => { closeAuthModal(); updatePhotoSectionVisibility(); updateWelcomeMessage(); if(currentStep===2) runDiagnosis(); }, 1000);
+setTimeout(() => { closeAuthModal();  updateWelcomeMessage(); if(currentStep===2) runDiagnosis(); }, 1000);
 }
 
 // ── LOCATION ──
@@ -2865,21 +2768,6 @@ document.querySelectorAll('.step-dot').forEach((d,i) => { d.classList.remove('ac
 currentStep=step;
 document.querySelector('.steps').style.display = 'flex';
 window.scrollTo({top:0, behavior:'smooth'});
-// Update photo section visibility
-if(step === 1) updatePhotoSectionVisibility();
-}
-
-function updatePhotoSectionVisibility() {
-const locked = document.getElementById('photoLocked');
-const unlocked = document.getElementById('photoUnlocked');
-if(!locked || !unlocked) return;
-if(isAuthenticated) {
-locked.style.display = 'none';
-unlocked.style.display = 'block';
-} else {
-locked.style.display = 'block';
-unlocked.style.display = 'none';
-}
 }
 
 // ── SYMPTOMS ──
@@ -3057,11 +2945,6 @@ if(final > 12) results.push({...d, matched, unmatched:d.symptoms.filter(s=>!sele
 results.sort((a,b)=>b.score-a.score);
 lastDiagResults = results;
 renderResults(results); goToStep(2);
-
-// Also launch photo analysis if photos were added
-if(photoFiles.length > 0 && isAuthenticated) {
-analyzePhoto();
-}
 }
 
 function renderResults(results) {
@@ -3140,17 +3023,9 @@ return `<div class="disease-section"><h4>🌿 Traitements — ${region}</h4>
 <div class="treatment-tabs">
 <button class="treat-tab active-bio" onclick="switchTab(this,'bio','${d.id}')">🌿 Bio / Naturels</button>
 <button class="treat-tab" onclick="switchTab(this,'pharma','${d.id}')">💊 Génériques</button>
-<button class="treat-tab" onclick="switchTab(this,'ai','${d.id}');searchAIMeds('${d.id}','${d.name}','${region}','${countryName}','${age}')">📍 Trouver mes médicaments</button>
 </div>
 <div class="treatment-panel active" id="panel-bio-${d.id}">${bio}</div>
 <div class="treatment-panel" id="panel-pharma-${d.id}">${pharma}</div>
-<div class="treatment-panel" id="panel-ai-${d.id}">
-<div class="ai-search-panel" id="ai-content-${d.id}">
-<div style="text-align:center;padding:24px;color:var(--text-light);font-size:14px;">
-Cliquez sur l'onglet <strong>Trouver mes médicaments</strong> pour rechercher les médicaments disponibles à <strong>${region}</strong>.
-</div>
-</div>
-</div>
 </div>`;
 }
 return `<div class="disease-section"><h4>🌿 Traitements — ${region}</h4><div class="treatment-locked-wrapper"><div class="lock-overlay"><div class="lock-icon">🔒</div><h3>Traitements verrouillés</h3><p>Souscrivez à un abonnement pour accéder aux traitements bio, médicaments vétérinaires et posologies détaillées.</p><button class="btn btn-primary" onclick="openPaymentModal()">🌾 Débloquer l'accès Premium</button><div style="margin-top:10px;font-size:12px;color:var(--text-light);">Déjà abonné ? <a style="color:var(--primary);font-weight:600;cursor:pointer;" onclick="openAuthModal()">Se connecter</a></div></div><div class="locked-overlay-content"><div class="treatment-tabs"><button class="treat-tab active-bio" disabled>🌿 Bio / Naturels</button><button class="treat-tab" disabled>💊 Vétérinaires</button></div>${bio}</div></div></div>`;
@@ -4174,154 +4049,6 @@ ${pct >= 60 ? `
 <button class="btn btn-primary" onclick="startQuiz()">🔄 Nouveau quiz (questions différentes)</button>
 </div>
 </div>`;
-}
-
-// ── PHOTO DIAGNOSTIC (multi-photo) ──────────────────────────────
-const MAX_PHOTOS = 5;
-let photoFiles = []; // Array of {base64, mediaType}
-
-function handlePhotoSelect(event) {
-const files = Array.from(event.target.files);
-files.forEach(f => addPhoto(f));
-event.target.value = '';
-}
-
-function handlePhotoDrop(event) {
-const files = Array.from(event.dataTransfer.files).filter(f => f.type.startsWith('image/'));
-files.forEach(f => addPhoto(f));
-}
-
-function addPhoto(file) {
-if(photoFiles.length >= MAX_PHOTOS) { alert('Maximum ' + MAX_PHOTOS + ' photos'); return; }
-if(file.size > 10 * 1024 * 1024) { alert('Fichier trop volumineux (max 10 Mo)'); return; }
-const reader = new FileReader();
-reader.onload = function(e) {
-photoFiles.push({
-base64: e.target.result,
-mediaType: file.type || 'image/jpeg'
-});
-renderPhotoGrid();
-};
-reader.readAsDataURL(file);
-}
-
-function removePhoto(index) {
-photoFiles.splice(index, 1);
-renderPhotoGrid();
-}
-
-function renderPhotoGrid() {
-const zone = document.getElementById('photoZone');
-const area = document.getElementById('photoPreviewArea');
-const grid = document.getElementById('photoGrid');
-const counter = document.getElementById('photoCounter');
-document.getElementById('photoResult').innerHTML = '';
-
-if(photoFiles.length === 0) {
-zone.style.display = 'block';
-area.style.display = 'none';
-return;
-}
-
-zone.style.display = 'none';
-area.style.display = 'block';
-counter.textContent = photoFiles.length + ' / ' + MAX_PHOTOS + ' photo' + (photoFiles.length > 1 ? 's' : '');
-
-let html = '';
-photoFiles.forEach((p, i) => {
-html += `<div class="photo-thumb">
-<img src="${p.base64}" alt="Photo ${i+1}">
-<button class="remove-photo" onclick="removePhoto(${i})">×</button>
-<span class="photo-num">${i+1}</span>
-</div>`;
-});
-
-// Add button if less than max
-if(photoFiles.length < MAX_PHOTOS) {
-html += `<button class="photo-add-btn" onclick="document.getElementById('photoInput').click()">
-<span class="add-icon">+</span>
-Ajouter
-</button>`;
-}
-
-grid.innerHTML = html;
-}
-
-function clearPhoto() {
-photoFiles = [];
-document.getElementById('photoInput').value = '';
-renderPhotoGrid();
-}
-
-async function analyzePhoto() {
-if(!photoFiles.length) return;
-await checkAuthStillValid();
-if(!isAuthenticated) {
-document.getElementById('photoResult').innerHTML = `<div class="ai-error" style="margin-top:16px;"><p>🔒 Votre accès a été révoqué. Veuillez vous réabonner.</p><button class="btn btn-primary" onclick="openPaymentModal()" style="margin-top:10px;">🌾 Réactiver l'accès</button></div>`;
-return;
-}
-const container = document.getElementById('photoResult');
-const btn = document.getElementById('btnAnalyzePhoto');
-btn.innerHTML = '<span class="spinner"></span> Analyse en cours...';
-btn.disabled = true;
-
-container.innerHTML = `<div class="ai-search-loading" style="margin-top:16px;">
-<div class="ai-pulse">🔬</div>
-<div class="ai-status"><strong>Analyse de ${photoFiles.length} photo${photoFiles.length>1?'s':''}...</strong><br>Examen des symptômes visibles en cours<br><small>Cela peut prendre 15-30 secondes</small></div>
-</div>`;
-
-// Prepare images array for API
-const images = photoFiles.map(p => ({
-base64: p.base64.split(',')[1],
-mediaType: p.base64.match(/data:(.*?);/)?.[1] || 'image/jpeg'
-}));
-
-try {
-const response = await fetch('/api/search-meds', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({
-photoAnalysis: true,
-images: images
-})
-});
-
-if(!response.ok) throw new Error('Erreur serveur');
-const result = await response.json();
-
-let html = '<div class="photo-ai-result">';
-html += '<h3 style="font-family:DM Serif Display,serif;font-size:20px;margin-bottom:12px;">🔬 Résultat de l\'analyse</h3>';
-
-if(result.diagnosis) {
-html += `<div style="padding:12px 16px;background:var(--primary-pale);border-radius:10px;margin-bottom:12px;border-left:4px solid var(--primary);">
-<strong style="color:var(--primary);font-size:15px;">Diagnostic probable :</strong><br>
-<span style="font-size:16px;font-weight:700;">${result.diagnosis}</span>
-</div>`;
-}
-if(result.confidence) {
-html += `<div style="margin-bottom:12px;"><span class="match-score">${result.confidence}</span></div>`;
-}
-if(result.symptoms_observed) {
-html += `<div style="margin-bottom:12px;"><strong style="font-size:12px;text-transform:uppercase;color:var(--text-light);">Symptômes observés sur la photo :</strong><div style="margin-top:6px;">${result.symptoms_observed.map(s => `<span class="matched-tag yes" style="margin:2px;">${s}</span>`).join('')}</div></div>`;
-}
-if(result.description) {
-html += `<p class="disease-desc">${result.description}</p>`;
-}
-if(result.immediate_actions) {
-html += `<div style="margin-top:12px;padding:12px;background:#FEF3E2;border-radius:10px;border-left:4px solid var(--warning);"><strong style="color:#92400E;">⚡ Actions immédiates :</strong><ul style="margin-top:6px;padding-left:18px;color:#92400E;font-size:13px;line-height:1.7;">${result.immediate_actions.map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
-}
-html += `<div class="ai-disclaimer" style="margin-top:14px;">⚠️ <strong>Avertissement :</strong> Ce diagnostic par photo est indicatif et ne remplace pas l'avis d'un vétérinaire qualifié.</div>`;
-html += `<div style="margin-top:12px;text-align:center;"><button class="btn btn-primary" onclick="clearPhoto()">📷 Nouveau diagnostic photo</button></div>`;
-html += '</div>';
-container.innerHTML = html;
-
-} catch(err) {
-container.innerHTML = `<div class="ai-error" style="margin-top:16px;">
-<p>❌ L'analyse n'a pas pu aboutir.</p><p style="font-size:12px;margin-top:6px;">${err.message}</p>
-<button class="btn btn-outline" onclick="analyzePhoto()" style="margin-top:10px;">🔄 Réessayer</button>
-</div>`;
-}
-btn.innerHTML = '🔬 Analyser avec l\'IA'; btn.disabled = false;
 }
 
 // ── VACCINATION CALENDAR ──────────────────────────────────
