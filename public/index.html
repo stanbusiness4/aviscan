@@ -862,8 +862,20 @@ font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s;
 <div><strong>Traitements complets</strong> — Remèdes bio + médicaments vétérinaires avec posologies détaillées</div>
 </div>
 <div class="payment-feature">
+<div class="pf-icon">📋</div>
+<div><strong>Historique des diagnostics</strong> — Sauvegardez et revoyez tous vos diagnostics passés</div>
+</div>
+<div class="payment-feature">
 <div class="pf-icon">📅</div>
 <div><strong>Calendrier vaccinal personnalisé</strong> — Dates exactes selon votre élevage</div>
+</div>
+<div class="payment-feature">
+<div class="pf-icon">💰</div>
+<div><strong>Calculateur de rentabilité</strong> — Analysez vos coûts et marges en détail</div>
+</div>
+<div class="payment-feature">
+<div class="pf-icon">📞</div>
+<div><strong>Annuaire vétérinaire</strong> — Trouvez les vétérinaires et pharmacies près de chez vous</div>
 </div>
 </div>
 
@@ -1487,6 +1499,25 @@ En attendant, l'app fonctionne en <strong>mode démo</strong> (tout email est ac
 </div>
 
 <!-- PAGE: QUIZ -->
+<!-- PAGE: HISTORIQUE DES DIAGNOSTICS -->
+<div class="section" id="section-history">
+<h2 class="section-title">📋 Historique des diagnostics</h2>
+<p class="section-sub">Retrouvez tous vos diagnostics sauvegardés. Suivez l'évolution sanitaire de votre élevage.</p>
+
+<div id="historyContent">
+<div id="historyEmpty" style="text-align:center;padding:40px 20px;color:var(--text-light);">
+<div style="font-size:48px;margin-bottom:16px;">📋</div>
+<h3 style="font-size:16px;color:var(--text-mid);margin-bottom:8px;">Aucun diagnostic sauvegardé</h3>
+<p style="font-size:13px;line-height:1.6;">Faites un diagnostic puis cliquez sur "💾 Sauvegarder ce diagnostic" pour le retrouver ici.</p>
+</div>
+<div id="historyList" style="display:none;"></div>
+</div>
+
+<div id="historyActions" style="display:none;text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+<button class="btn btn-outline" onclick="clearHistory()" style="font-size:13px;color:var(--danger);border-color:var(--danger);">🗑️ Supprimer tout l'historique</button>
+</div>
+</div>
+
 <div class="section" id="section-quiz">
 <h2 class="section-title">❓ Quiz Avicole</h2>
 <p class="section-sub">Testez vos connaissances en aviculture et obtenez votre certificat !</p>
@@ -1650,7 +1681,7 @@ Développée par <strong>HORIZON AGRO-PASTORAL</strong>, AviaScan met la technol
 <h3 style="font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:12px;color:var(--primary);">&#x1F512; Gratuit vs Premium</h3>
 <div style="display:grid;gap:8px;font-size:13px;">
 <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#E8F5E9;border-radius:8px;"><span style="font-size:16px;">&#x2705;</span><span style="color:#1B5E20;"><strong>Gratuit :</strong> Diagnostic par sympt&#244;mes, Calendrier vaccinal, Quiz avicole (350 questions), Guide de l'&#233;leveur, Tutoriel</span></div>
-<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FFF3E0;border-radius:8px;"><span style="font-size:16px;">&#x2B50;</span><span style="color:#85500B;"><strong>Premium :</strong> Traitements d&#233;taill&#233;s (bio + v&#233;to), Calculateur de rentabilit&#233;, Annuaire v&#233;t&#233;rinaire</span></div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FFF3E0;border-radius:8px;"><span style="font-size:16px;">&#x2B50;</span><span style="color:#85500B;"><strong>Premium :</strong> Traitements d&#233;taill&#233;s (bio + v&#233;to), Historique des diagnostics, Calendrier vaccinal personnalis&#233;, Calculateur de rentabilit&#233;, Annuaire v&#233;t&#233;rinaire</span></div>
 </div>
 </div>
 
@@ -1820,6 +1851,7 @@ Nous écrire sur WhatsApp
 <div class="hamburger-menu-backdrop" id="hamburgerBackdrop" onclick="closeHamburger()"></div>
 <div class="hamburger-menu" id="hamburgerMenu">
 <button class="hamburger-item" onclick="navFromMenu('guide')"><span class="hm-icon">📖</span> Guide de l'éleveur</button>
+<button class="hamburger-item" onclick="navFromMenu('history')"><span class="hm-icon">📋</span> Historique diagnostics</button>
 <button class="hamburger-item" onclick="navFromMenu('calc')"><span class="hm-icon">💰</span> Rentabilité</button>
 <button class="hamburger-item" onclick="navFromMenu('vet')"><span class="hm-icon">📞</span> Annuaire véto</button>
 <button class="hamburger-item" onclick="navFromMenu('quiz')"><span class="hm-icon">🏆</span> Quiz avicole</button>
@@ -3008,6 +3040,11 @@ h+=`<div class="prevention-box"><h4>🛡️ Prévention</h4><ul>${d.prevention.m
 h+=`<div style="background:var(--bg);border-radius:12px;padding:14px 18px;margin-top:16px;border:1px solid var(--border);font-size:12px;color:var(--text-light);line-height:1.6;text-align:center;">
 <strong>⚠️ Avertissement :</strong> AviaScan est un outil d'aide à la décision et ne remplace pas l'avis d'un vétérinaire qualifié. Les diagnostics proposés sont des probabilités basées sur les symptômes renseignés. Consultez toujours un professionnel avant d'administrer un traitement.
 </div>`;
+if(isAuthenticated) {
+h+=`<div style="text-align:center;margin-top:16px;">
+<button class="btn btn-primary" onclick="saveDiagnostic()" style="padding:12px 28px;font-size:14px;">💾 Sauvegarder ce diagnostic</button>
+</div>`;
+}
 c.innerHTML=h;
 }
 
@@ -3291,7 +3328,7 @@ const el = document.getElementById('section-' + page);
 if(el) el.classList.add('active');
 
 // Premium pages: overlay instead of destroying content
-if(['calc','vet'].includes(page)) {
+if(['calc','vet','history'].includes(page)) {
 // Remove any existing premium overlay
 const existingOverlay = el.querySelector('.premium-gate');
 if(existingOverlay) existingOverlay.remove();
@@ -3317,6 +3354,8 @@ overlay.innerHTML = `<div style="text-align:center;padding:50px 20px;position:re
 <div style="margin-top:10px;font-size:12px;color:var(--text-light);">Déjà abonné ? <a style="color:var(--primary);font-weight:600;cursor:pointer;" onclick="openAuthModal()">Se connecter</a></div>
 </div>`;
 el.insertBefore(overlay, el.children[2] || null);
+} else if(page === 'history') {
+renderHistory();
 }
 }
 if(page === 'vax') showVaxCalendar(currentVaxType, document.querySelector('.vax-type-btn.active'));
@@ -4049,6 +4088,109 @@ ${pct >= 60 ? `
 <button class="btn btn-primary" onclick="startQuiz()">🔄 Nouveau quiz (questions différentes)</button>
 </div>
 </div>`;
+}
+
+// ── HISTORIQUE DES DIAGNOSTICS ──────────────────────────────
+function getHistory() {
+try { return JSON.parse(localStorage.getItem('hap_diag_history') || '[]'); } catch(e) { return []; }
+}
+
+function saveDiagnostic() {
+if(!isAuthenticated) { openPaymentModal(); return; }
+if(!lastDiagResults || !lastDiagResults.length) { showToast('❌ Aucun diagnostic à sauvegarder'); return; }
+const history = getHistory();
+const region = document.getElementById('region').value;
+const age = document.getElementById('poultryAge').value;
+const farmType = document.getElementById('farmType').value;
+const sickCount = document.getElementById('sickCount').value || '?';
+const flockSize = document.getElementById('flockSize').value || '?';
+const entry = {
+id: Date.now(),
+date: new Date().toISOString(),
+region: region,
+age: AGE_LABELS[age] || age,
+farmType: farmType,
+sickCount: sickCount,
+flockSize: flockSize,
+symptoms: [...selectedSymptoms].map(id => { const s = SYMPTOMS.find(x => x.id === id); return s ? s.name : id; }),
+results: lastDiagResults.slice(0, 3).map(d => ({
+name: d.name,
+score: d.score,
+severity: d.severity,
+matchedCount: d.matchedCount,
+matched: d.matched.map(id => { const s = SYMPTOMS.find(x => x.id === id); return s ? s.name : id; })
+}))
+};
+history.unshift(entry);
+if(history.length > 50) history.length = 50;
+localStorage.setItem('hap_diag_history', JSON.stringify(history));
+showToast('✅ Diagnostic sauvegardé !');
+}
+
+function renderHistory() {
+const history = getHistory();
+const empty = document.getElementById('historyEmpty');
+const list = document.getElementById('historyList');
+const actions = document.getElementById('historyActions');
+if(!history.length) {
+if(empty) empty.style.display = 'block';
+if(list) list.style.display = 'none';
+if(actions) actions.style.display = 'none';
+return;
+}
+if(empty) empty.style.display = 'none';
+if(list) list.style.display = 'block';
+if(actions) actions.style.display = 'block';
+
+let h = '';
+history.forEach((entry, idx) => {
+const date = new Date(entry.date);
+const dateStr = date.toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'});
+const timeStr = date.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+const top = entry.results[0];
+const sevColor = top.severity === 'high' ? '#C0392B' : top.severity === 'medium' ? '#E8872A' : '#27713B';
+const sevLabel = top.severity === 'high' ? 'Grave' : top.severity === 'medium' ? 'Modéré' : 'Bénin';
+
+h += `<div style="background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:10px;cursor:pointer;border-left:4px solid ${sevColor};" onclick="this.querySelector('.hist-detail').style.display=this.querySelector('.hist-detail').style.display==='none'?'block':'none'">
+<div style="display:flex;justify-content:space-between;align-items:center;">
+<div>
+<strong style="font-size:15px;color:var(--text);">${top.name}</strong>
+<span style="display:inline-block;background:${sevColor};color:#fff;font-size:10px;padding:2px 8px;border-radius:50px;margin-left:8px;font-weight:700;">${sevLabel} — ${top.score}%</span>
+</div>
+<div style="text-align:right;font-size:12px;color:var(--text-light);">${dateStr}<br>${timeStr}</div>
+</div>
+<div style="font-size:12px;color:var(--text-mid);margin-top:6px;">📍 ${entry.region} · ${entry.age} · 🤒 ${entry.sickCount}/${entry.flockSize}</div>
+<div class="hist-detail" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+<div style="margin-bottom:10px;">
+<strong style="font-size:12px;text-transform:uppercase;color:var(--text-light);">Symptômes sélectionnés (${entry.symptoms.length})</strong>
+<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px;">${entry.symptoms.map(s => `<span style="background:var(--primary-pale);color:var(--primary);font-size:11px;padding:3px 8px;border-radius:50px;">${s}</span>`).join('')}</div>
+</div>
+${entry.results.length > 1 ? `<div>
+<strong style="font-size:12px;text-transform:uppercase;color:var(--text-light);">Autres maladies possibles</strong>
+<div style="margin-top:6px;">${entry.results.slice(1).map(r => `<div style="font-size:12px;color:var(--text-mid);padding:4px 0;">• ${r.name} — ${r.score}% (${r.matchedCount} symptômes)</div>`).join('')}</div>
+</div>` : ''}
+<div style="text-align:right;margin-top:10px;">
+<button onclick="event.stopPropagation();deleteHistoryEntry(${entry.id})" style="background:none;border:1px solid var(--danger);color:var(--danger);padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer;">🗑️ Supprimer</button>
+</div>
+</div>
+</div>`;
+});
+list.innerHTML = h;
+}
+
+function deleteHistoryEntry(id) {
+let history = getHistory();
+history = history.filter(e => e.id !== id);
+localStorage.setItem('hap_diag_history', JSON.stringify(history));
+renderHistory();
+showToast('🗑️ Diagnostic supprimé');
+}
+
+function clearHistory() {
+if(!confirm('Supprimer tout l\'historique des diagnostics ?')) return;
+localStorage.removeItem('hap_diag_history');
+renderHistory();
+showToast('🗑️ Historique effacé');
 }
 
 // ── VACCINATION CALENDAR ──────────────────────────────────
