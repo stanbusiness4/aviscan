@@ -1535,50 +1535,51 @@ En attendant, l'app fonctionne en <strong>mode démo</strong> (tout email est ac
 </div>
 </div>
 
-<!-- PAGE: TUTORIEL -->
-<div class="section" id="section-tuto">
-<h2 class="section-title">🎬 Comment utiliser AviaScan ?</h2>
-<p class="section-sub">Regardez cette vidéo pour apprendre à utiliser toutes les fonctionnalités de l'application.</p>
+<!-- PAGE: FORMATION -->
+<div class="section" id="section-formation">
+<h2 class="section-title">🎓 Formation avicole</h2>
+<p class="section-sub">Vidéos éducatives et guides PDF pour devenir un éleveur professionnel.</p>
 
-<div id="videoEmbed" style="margin-bottom:20px;">
-<div style="text-align:center;padding:40px 20px;background:var(--bg);border-radius:16px;">
-<div style="font-size:48px;margin-bottom:12px;">🎬</div>
-<p style="color:var(--text-mid);font-size:14px;">Chargement de la vidéo...</p>
-</div>
+<!-- Tab selector -->
+<div style="display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px;">
+<button class="treat-tab active-bio" onclick="switchFormationTab(this,'all')" style="white-space:nowrap;">Tout</button>
+<button class="treat-tab" onclick="switchFormationTab(this,'video')" style="white-space:nowrap;">🎬 Vidéos</button>
+<button class="treat-tab" onclick="switchFormationTab(this,'pdf')" style="white-space:nowrap;">📄 PDFs</button>
 </div>
 
-<div style="background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);border:1px solid var(--border);backdrop-filter:blur(10px);">
-<h3 style="font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:16px;color:var(--primary);">📖 Guide rapide</h3>
-
-<div style="display:grid;gap:12px;">
-<div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg);border-radius:10px;">
-<div style="width:32px;height:32px;min-width:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">1</div>
-<div><strong style="font-size:14px;">🩺 Diagnostic par symptômes</strong><p style="font-size:13px;color:var(--text-mid);margin-top:4px;">Remplissez les informations sur votre élevage, sélectionnez les symptômes observés, et obtenez un diagnostic avec les traitements adaptés.</p></div>
-</div>
-<div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg);border-radius:10px;">
-<div style="width:32px;height:32px;min-width:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">2</div>
-<div><strong style="font-size:14px;">📍 Annuaire vétérinaire</strong><p style="font-size:13px;color:var(--text-mid);margin-top:4px;">Recherchez les vétérinaires et pharmacies vétérinaires dans votre ville pour obtenir des médicaments et des conseils professionnels.</p></div>
-</div>
-<div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg);border-radius:10px;">
-<div style="width:32px;height:32px;min-width:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">3</div>
-<div><strong style="font-size:14px;">💉 Calendrier vaccinal</strong><p style="font-size:13px;color:var(--text-mid);margin-top:4px;">Entrez la date d'arrivée de vos poussins et sélectionnez le type de production. Le calendrier calcule toutes les dates de vaccination.</p></div>
-</div>
-<div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg);border-radius:10px;">
-<div style="width:32px;height:32px;min-width:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">4</div>
-<div><strong style="font-size:14px;">💰 Calculateur de rentabilité</strong><p style="font-size:13px;color:var(--text-mid);margin-top:4px;">Saisissez vos coûts (poussins, aliment, vaccins) et vos revenus pour calculer la rentabilité de votre lot.</p></div>
-</div>
-<div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg);border-radius:10px;">
-<div style="width:32px;height:32px;min-width:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">5</div>
-<div><strong style="font-size:14px;">📍 Annuaire vétérinaire</strong><p style="font-size:13px;color:var(--text-mid);margin-top:4px;">Recherchez les vétérinaires et pharmacies vétérinaires dans votre ville pour obtenir des médicaments et des conseils professionnels.</p></div>
-</div>
-<div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg);border-radius:10px;">
-<div style="width:32px;height:32px;min-width:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">6</div>
-<div><strong style="font-size:14px;">🏆 Quiz & Certification</strong><p style="font-size:13px;color:var(--text-mid);margin-top:4px;">Testez vos connaissances avec 20 questions aléatoires et obtenez votre certificat de compétence en aviculture.</p></div>
-</div>
+<!-- FREE VIDEOS -->
+<div class="formation-cat" data-type="video">
+<h3 style="font-size:15px;font-weight:700;color:var(--primary);margin-bottom:12px;display:flex;align-items:center;gap:8px;">🎬 Vidéos gratuites <span style="background:#E8F5E9;color:#1B5E20;font-size:10px;padding:2px 8px;border-radius:50px;font-weight:700;">GRATUIT</span></h3>
+<div id="freeVideosGrid" style="display:grid;gap:10px;">
+<div style="text-align:center;padding:30px;color:var(--text-light);font-size:13px;">Chargement des vidéos...</div>
 </div>
 </div>
 
-<div style="background:linear-gradient(135deg,#0B4F6C,#062A3E);border-radius:var(--radius);padding:24px;text-align:center;color:#fff;margin-top:16px;">
+<!-- PREMIUM VIDEOS -->
+<div class="formation-cat" data-type="video" style="margin-top:20px;">
+<h3 style="font-size:15px;font-weight:700;color:var(--primary);margin-bottom:12px;display:flex;align-items:center;gap:8px;">🎬 Mini-formations <span style="background:#FFF3E0;color:#85500B;font-size:10px;padding:2px 8px;border-radius:50px;font-weight:700;">PREMIUM</span></h3>
+<div id="premiumVideosGrid" style="display:grid;gap:10px;">
+<div style="text-align:center;padding:30px;color:var(--text-light);font-size:13px;">Chargement...</div>
+</div>
+</div>
+
+<!-- FREE PDFs -->
+<div class="formation-cat" data-type="pdf" style="margin-top:20px;">
+<h3 style="font-size:15px;font-weight:700;color:var(--primary);margin-bottom:12px;display:flex;align-items:center;gap:8px;">📄 Guides PDF gratuits <span style="background:#E8F5E9;color:#1B5E20;font-size:10px;padding:2px 8px;border-radius:50px;font-weight:700;">GRATUIT</span></h3>
+<div id="freePdfsGrid" style="display:grid;gap:10px;">
+<div style="text-align:center;padding:30px;color:var(--text-light);font-size:13px;">Chargement...</div>
+</div>
+</div>
+
+<!-- PREMIUM PDFs -->
+<div class="formation-cat" data-type="pdf" style="margin-top:20px;">
+<h3 style="font-size:15px;font-weight:700;color:var(--primary);margin-bottom:12px;display:flex;align-items:center;gap:8px;">📄 Formations PDF complètes <span style="background:#FFF3E0;color:#85500B;font-size:10px;padding:2px 8px;border-radius:50px;font-weight:700;">PREMIUM</span></h3>
+<div id="premiumPdfsGrid" style="display:grid;gap:10px;">
+<div style="text-align:center;padding:30px;color:var(--text-light);font-size:13px;">Chargement...</div>
+</div>
+</div>
+
+<div style="background:linear-gradient(135deg,#0B4F6C,#062A3E);border-radius:var(--radius);padding:24px;text-align:center;color:#fff;margin-top:20px;">
 <p style="font-size:14px;opacity:0.9;margin-bottom:14px;">Besoin d'aide supplémentaire ?</p>
 <a href="https://wa.me/2290141997239?text=Bonjour%2C%20j'ai%20besoin%20d'aide%20pour%20utiliser%20AviaScan." target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:#25D366;color:#fff;border-radius:50px;font-family:inherit;font-size:14px;font-weight:700;text-decoration:none;">
 📱 Contactez-nous sur WhatsApp
@@ -1851,6 +1852,7 @@ Nous écrire sur WhatsApp
 <div class="hamburger-menu-backdrop" id="hamburgerBackdrop" onclick="closeHamburger()"></div>
 <div class="hamburger-menu" id="hamburgerMenu">
 <button class="hamburger-item" onclick="navFromMenu('guide')"><span class="hm-icon">📖</span> Guide de l'éleveur</button>
+<button class="hamburger-item" onclick="navFromMenu('formation')"><span class="hm-icon">🎓</span> Formation</button>
 <button class="hamburger-item" onclick="navFromMenu('history')"><span class="hm-icon">📋</span> Historique diagnostics</button>
 <button class="hamburger-item" onclick="navFromMenu('calc')"><span class="hm-icon">💰</span> Rentabilité</button>
 <button class="hamburger-item" onclick="navFromMenu('vet')"><span class="hm-icon">📞</span> Annuaire véto</button>
@@ -1869,9 +1871,9 @@ Nous écrire sur WhatsApp
 <span class="nav-icon">💉</span>
 <span class="nav-label">Vaccins</span>
 </button>
-<button class="nav-item" onclick="switchPage('tuto',this)">
-<span class="nav-icon">🎬</span>
-<span class="nav-label">Tutoriel</span>
+<button class="nav-item" onclick="switchPage('formation',this)">
+<span class="nav-icon">🎓</span>
+<span class="nav-label">Formation</span>
 </button>
 <button class="nav-item" onclick="toggleHamburger()" id="hamburgerBtn">
 <span class="nav-icon">☰</span>
@@ -2176,7 +2178,7 @@ if(saved) { isAuthenticated = true; currentAuthEmail = saved; updateAuthBadge();
 renderCategoryButtons(); renderSymptoms();
 
 setInterval(checkAuthStillValid, 120000);
-fetchFromGoogleSheet().then(() => { updateVideoEmbed(); updateAnnonce(); updateTestimonials(); generateQR(); updateSubPrices(); });
+fetchFromGoogleSheet().then(() => { updateVideoEmbed(); updateAnnonce(); updateTestimonials(); generateQR(); updateSubPrices(); renderFormations(); });
 
 // Welcome message based on time of day
 updateWelcomeMessage();
@@ -2403,10 +2405,30 @@ if(resp && resp.table && resp.table.rows) {
 resp.table.rows.forEach(row => {
 if(!row.c) return;
 
-// Full row: A=0, B=1, C=2, D=3, E=4, ... M=12, N=13
+// Full row: A=0, B=1, C=2, D=3, E=4, ... M=12, N=13, S=18, T=19, V=21, W=22
 const colM = (row.c[12] && row.c[12].v) ? String(row.c[12].v).trim() : '';
 const colN = (row.c[13] && row.c[13].v) ? String(row.c[13].v).trim() : '';
 const colE = (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '';
+const colS = (row.c[18] && row.c[18].v) ? String(row.c[18].v).trim() : '';
+const colT = (row.c[19] && row.c[19].v) ? String(row.c[19].v).trim() : '';
+const colV = (row.c[21] && row.c[21].v) ? String(row.c[21].v).trim() : '';
+const colW = (row.c[22] && row.c[22].v) ? String(row.c[22].v).trim() : '';
+
+// Videos from S/T
+if(colS && colT) {
+const vKey = colS.toUpperCase();
+if(vKey.startsWith('VF_')) { appFormations.freeVideos.push(colT); }
+else if(vKey.startsWith('VP_')) { appFormations.premiumVideos.push(colT); }
+}
+
+// PDFs from V/W
+if(colV && colW) {
+const pKey = colV.toUpperCase();
+if(pKey.startsWith('PF_')) { appFormations.freePdfs.push(colW); }
+else if(pKey.startsWith('PP_')) { appFormations.premiumPdfs.push(colW); }
+}
+
+// Config from M/N
 if(colM && colN) {
 const key = colM.toUpperCase();
 if(key === 'VIDEO_URL') { appVideoUrl = colN; updateVideoEmbed(); }
@@ -2469,6 +2491,7 @@ let appAnnonce = ''; // Announcement text
 let appAnnonceLien = ''; // Announcement link
 let appAnnonceCouleur = ''; // Announcement color
 let appAvis = []; // Testimonials array
+let appFormations = { freeVideos: [], premiumVideos: [], freePdfs: [], premiumPdfs: [] };
 let appSnaps = { mensuel: '', trimestriel: '', annuel: '' }; // Snap IDs per tier
 let appPrices = { mensuel: '3500', trimestriel: '9000', annuel: '30000' }; // Default prices
 let currentSubTier = 'mensuel'; // Current selected tier
@@ -2478,10 +2501,25 @@ function parseEmails(text, sep) {
 const active = [], inactive = [];
 emailExpirations = {};
 appAvis = [];
+appFormations = { freeVideos: [], premiumVideos: [], freePdfs: [], premiumPdfs: [] };
 for(const line of text.split('\n')) {
 const cols = line.split(sep).map(c => c.trim().replace(/"/g,'').replace(/\r/g,''));
 
-// Scan ALL column pairs for config keys (M/N = index 12/13, but also check other pairs in case of CSV shift)
+// Direct reading of S/T (videos) and V/W (pdfs) - S=18, T=19, V=21, W=22
+const colS = (cols[18] || '').trim().toUpperCase();
+const colT = (cols[19] || '').trim();
+if(colS && colT) {
+if(colS.startsWith('VF_')) appFormations.freeVideos.push(colT);
+else if(colS.startsWith('VP_')) appFormations.premiumVideos.push(colT);
+}
+const colV = (cols[21] || '').trim().toUpperCase();
+const colW = (cols[22] || '').trim();
+if(colV && colW) {
+if(colV.startsWith('PF_')) appFormations.freePdfs.push(colW);
+else if(colV.startsWith('PP_')) appFormations.premiumPdfs.push(colW);
+}
+
+// Scan ALL column pairs for config keys (M/N = index 12/13)
 for(let i = 2; i < cols.length - 1; i++) {
 const possibleKey = (cols[i] || '').trim().toUpperCase();
 const possibleVal = (cols[i+1] || '').trim();
@@ -3308,7 +3346,7 @@ if(btn) {
 btn.classList.add('active');
 } else {
 // Called from hamburger — highlight the correct fixed tab or hamburger btn
-const fixedPages = ['diagnostic','vax','tuto'];
+const fixedPages = ['diagnostic','vax','formation'];
 if(fixedPages.includes(page)) {
 document.querySelectorAll('.nav-item').forEach(b => {
 if(b.getAttribute('onclick')?.includes("'" + page + "'")) b.classList.add('active');
@@ -4088,6 +4126,85 @@ ${pct >= 60 ? `
 <button class="btn btn-primary" onclick="startQuiz()">🔄 Nouveau quiz (questions différentes)</button>
 </div>
 </div>`;
+}
+
+// ── FORMATION PAGE ──────────────────────────────────
+function switchFormationTab(btn, filter) {
+document.querySelectorAll('.formation-cat').forEach(c => {
+if(filter === 'all') c.style.display = 'block';
+else c.style.display = c.dataset.type === filter ? 'block' : 'none';
+});
+btn.parentElement.querySelectorAll('.treat-tab').forEach(b => b.classList.remove('active-bio'));
+btn.classList.add('active-bio');
+}
+
+function renderFormations() {
+renderVideoGrid('freeVideosGrid', appFormations.freeVideos, false);
+renderVideoGrid('premiumVideosGrid', appFormations.premiumVideos, true);
+renderPdfGrid('freePdfsGrid', appFormations.freePdfs, false);
+renderPdfGrid('premiumPdfsGrid', appFormations.premiumPdfs, true);
+}
+
+function renderVideoGrid(containerId, items, isPremium) {
+const container = document.getElementById(containerId);
+if(!container) return;
+if(!items.length) {
+container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-light);font-size:13px;">Aucun contenu disponible pour le moment.</div>';
+return;
+}
+let h = '';
+items.forEach(item => {
+// Format: Titre|URL_YouTube|Description
+const parts = item.split('|');
+const title = parts[0] || 'Vidéo';
+const url = parts[1] || '';
+const desc = parts[2] || '';
+const ytId = url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/)?.[1] || '';
+const thumb = ytId ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg` : '';
+const locked = isPremium && !isAuthenticated;
+
+h += `<div style="background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);${locked?'opacity:0.7;':''}">
+<div style="position:relative;cursor:pointer;" onclick="${locked ? 'openPaymentModal()' : (ytId ? `window.open('${url}','_blank')` : '')}">
+${thumb ? `<img src="${thumb}" alt="${title}" style="width:100%;height:auto;display:block;">` : '<div style="height:120px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:32px;">🎬</div>'}
+${locked ? '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;"><span style="font-size:32px;">🔒</span></div>' : '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;"><span style="font-size:36px;opacity:0.9;">▶</span></div>'}
+</div>
+<div style="padding:12px;">
+<strong style="font-size:13px;color:var(--text);display:block;margin-bottom:4px;">${title}</strong>
+${desc ? `<p style="font-size:12px;color:var(--text-mid);line-height:1.5;">${desc}</p>` : ''}
+${locked ? '<div style="font-size:11px;color:var(--accent);font-weight:700;margin-top:6px;">🔒 Réservé aux abonnés</div>' : ''}
+</div>
+</div>`;
+});
+container.innerHTML = h;
+}
+
+function renderPdfGrid(containerId, items, isPremium) {
+const container = document.getElementById(containerId);
+if(!container) return;
+if(!items.length) {
+container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-light);font-size:13px;">Aucun contenu disponible pour le moment.</div>';
+return;
+}
+let h = '';
+items.forEach(item => {
+// Format: Titre|URL_GoogleDrive|Description
+const parts = item.split('|');
+const title = parts[0] || 'Document';
+const url = parts[1] || '';
+const desc = parts[2] || '';
+const locked = isPremium && !isAuthenticated;
+
+h += `<div style="background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);border:1px solid var(--border);display:flex;align-items:center;gap:14px;cursor:pointer;${locked?'opacity:0.7;':''}" onclick="${locked ? 'openPaymentModal()' : (url ? `window.open('${url}','_blank')` : '')}">
+<div style="width:44px;height:44px;min-width:44px;border-radius:10px;background:${locked?'var(--bg)':'#FDEAEA'};display:flex;align-items:center;justify-content:center;font-size:22px;">${locked ? '🔒' : '📄'}</div>
+<div style="flex:1;min-width:0;">
+<strong style="font-size:14px;color:var(--text);display:block;">${title}</strong>
+${desc ? `<p style="font-size:12px;color:var(--text-mid);margin-top:2px;">${desc}</p>` : ''}
+${locked ? '<div style="font-size:11px;color:var(--accent);font-weight:700;margin-top:4px;">🔒 Réservé aux abonnés</div>' : ''}
+</div>
+<div style="font-size:18px;color:var(--text-light);">${locked ? '' : '↗'}</div>
+</div>`;
+});
+container.innerHTML = h;
 }
 
 // ── HISTORIQUE DES DIAGNOSTICS ──────────────────────────────
