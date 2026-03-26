@@ -938,6 +938,7 @@ Déjà abonné ? <a onclick="closePaymentModal();openAuthModal()">Se connecter a
 <span id="authBadgeIcon">⭐</span>
 <span id="authBadgeText">S'abonner</span>
 </div>
+<div id="refreshBtn" onclick="refreshApp()" style="position:absolute;top:24px;left:24px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;transition:all 0.3s;font-size:16px;color:#fff;" title="Rafraîchir">🔄</div>
 </div>
 </div>
 
@@ -2768,7 +2769,7 @@ showMsg('authSuccess1','✅ Email vérifié ! Accès aux traitements activé.');
 }
 btn.innerHTML='🔓 Vérifier et débloquer'; btn.disabled=false;
 
-setTimeout(() => { closeAuthModal();  updateWelcomeMessage(); if(currentStep===2) runDiagnosis(); }, 1000);
+setTimeout(() => { closeAuthModal();  updateWelcomeMessage(); renderFormations(); if(currentStep===2) runDiagnosis(); }, 1000);
 }
 
 // ── LOCATION ──
@@ -3436,6 +3437,7 @@ renderHistory();
 }
 }
 if(page === 'vax') showVaxCalendar(currentVaxType, document.querySelector('.vax-type-btn.active'));
+if(page === 'formation') renderFormations();
 }
 window.scrollTo({top: 0, behavior: 'smooth'});
 }
@@ -4165,6 +4167,22 @@ ${pct >= 60 ? `
 <button class="btn btn-primary" onclick="startQuiz()">🔄 Nouveau quiz (questions différentes)</button>
 </div>
 </div>`;
+}
+
+// ── REFRESH APP ──────────────────────────────────
+function refreshApp() {
+const btn = document.getElementById('refreshBtn');
+if(btn) { btn.style.transform = 'rotate(360deg)'; setTimeout(() => btn.style.transform = '', 600); }
+showToast('🔄 Rafraîchissement...');
+appAvis = [];
+appFormations = { freeVideos: [], premiumVideos: [], freePdfs: [], premiumPdfs: [] };
+fetchFromGoogleSheet().then(() => {
+updateVideoEmbed(); updateAnnonce(); updateTestimonials(); generateQR(); updateSubPrices(); renderFormations();
+if(isAuthenticated) checkAuthStillValid();
+showToast('✅ Données mises à jour !');
+}).catch(() => {
+showToast('❌ Erreur de connexion');
+});
 }
 
 // ── FORMATION PAGE ──────────────────────────────────
