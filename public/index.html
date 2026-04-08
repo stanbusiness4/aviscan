@@ -917,6 +917,17 @@ data-custom-cta-text="Profiter de l'offre">
 </div>
 </div>
 
+<div style="background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border-radius:12px;padding:14px 18px;margin-top:14px;border:1px solid #A5D6A7;">
+<div style="display:flex;align-items:flex-start;gap:10px;">
+<span style="font-size:20px;">✅</span>
+<div>
+<strong style="color:#1B5E20;font-size:13px;">Après votre paiement</strong>
+<p style="font-size:12px;color:#2E7D32;line-height:1.6;margin-top:4px;">Votre compte sera activé dans un délai maximum de <strong>15 minutes</strong>. Vous recevrez un message de confirmation. Si vous ne recevez rien après 15 min, contactez-nous :</p>
+<a href="https://wa.me/2290141997239?text=Bonjour%2C%20je%20viens%20de%20payer%20mon%20abonnement%20AviaScan.%20Mon%20email%20est%20%3A%20" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:8px 16px;background:#25D366;color:#fff;border-radius:50px;font-size:12px;font-weight:700;text-decoration:none;">📱 Contacter le support WhatsApp</a>
+</div>
+</div>
+</div>
+
 <div class="payment-divider">ou</div>
 
 <div class="payment-login-link">
@@ -944,8 +955,7 @@ Déjà abonné ? <a onclick="closePaymentModal();openAuthModal()">Se connecter a
 
 <div class="container">
 <div class="config-banner" id="configBanner" style="display:none;">
-⚙️ <strong>Configuration requise</strong> — Modifiez la constante <code>GOOGLE_SHEET_CSV_URL</code> dans le code avec l'URL de votre Google Sheet publié en CSV.<br>
-En attendant, l'app fonctionne en <strong>mode démo</strong> (tout email est accepté).
+⚙️ <strong>Configuration Firebase requise</strong> — Vérifiez que Firebase est correctement configuré dans le code.
 </div>
 
 <!-- ANNOUNCEMENT BANNER (driven by Google Sheet) -->
@@ -1920,34 +1930,53 @@ Nous écrire sur WhatsApp
 </button>
 </nav>
 
+<script type="module">
+// ═══════════════════════════════════════════════════════════════════
+// 🔥 FIREBASE SETUP
+// ═══════════════════════════════════════════════════════════════════
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import { getFirestore, collection, doc, getDoc, getDocs, query, where, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyDhWj7XlPQJt-GI9ntfsMC9ltvqE2Tuhx4",
+authDomain: "aviascan-horizon.firebaseapp.com",
+projectId: "aviascan-horizon",
+storageBucket: "aviascan-horizon.firebasestorage.app",
+messagingSenderId: "882712428228",
+appId: "1:882712428228:web:7f140e641bd5a9b08f5391"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
+
+// Expose Firebase functions globally so non-module code can use them
+window.fbDb = db;
+window.fbCollection = collection;
+window.fbDoc = doc;
+window.fbGetDoc = getDoc;
+window.fbGetDocs = getDocs;
+window.fbQuery = query;
+window.fbWhere = where;
+window.fbTimestamp = Timestamp;
+window.firebaseReady = true;
+window.dispatchEvent(new Event('firebase-ready'));
+</script>
+
 <script>
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  🔧 CONFIGURATION                                                ║
-// ║                                                                  ║
-// ║  OPTION 1 (recommandée) : Google Sheet publié en CSV              ║
-// ║  → Fichier > Partager > Publier sur le Web > CSV                  ║
-// ║                                                                  ║
-// ║  OPTION 2 (backup) : Liste d'emails directement ci-dessous        ║
-// ║  → Fonctionne toujours, même hors ligne                          ║
-// ║  → Si le Google Sheet est inaccessible, cette liste est utilisée  ║
+// ║  🔧 CONFIGURATION FIREBASE                                        ║
+// ║  Les abonnés et la config sont gérés depuis Firebase Firestore    ║
+// ║  Dashboard admin : /admin.html                                    ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
-const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR19Zl_ige_LuDl_ddTJ5Myc2LW1C-F8gNSzX6YgLJFx_wWM1iBr6vsL-13KP2QLA/pub?gid=1659744720&single=true&output=csv';
-
-// Liste de secours — ajoutez ici les emails autorisés
-// Cette liste est utilisée si le Google Sheet est inaccessible
-// Mettez les emails en minuscule, un par ligne
+// Liste de secours (backup) — utilisée si Firebase est inaccessible
 const LOCAL_EMAILS = [
-'exemple1@gmail.com',
-'eleveur.cotonou@yahoo.fr',
-'ferme.abomey@gmail.com',
-// Ajoutez vos emails ci-dessous :
-
+// Ajoutez vos emails de secours ici (en minuscule)
 ];
 
 // ═══════════════════════════════════════════════════════════════════
 
-const IS_CONFIGURED = LOCAL_EMAILS.length > 0 || GOOGLE_SHEET_CSV_URL !== 'VOTRE_URL_GOOGLE_SHEET_CSV';
+const IS_CONFIGURED = true; // Firebase is always configured
 
 let isAuthenticated = false, currentAuthEmail = '', allowedEmails = [];
 
@@ -2412,194 +2441,117 @@ return parsedEmailData.active;
 return null;
 }
 
-async function fetchFromGoogleSheet() {
-const csvUrl = GOOGLE_SHEET_CSV_URL;
-if(!csvUrl || csvUrl === 'VOTRE_URL_GOOGLE_SHEET_CSV') return null;
-
-// Méthode 1 : CSV direct
-try {
-const r = await fetch(csvUrl);
-if(r.ok) { const d = parseEmails(await r.text(), ','); if(d.total) return d; }
-} catch(e) {}
-
-// Méthode 2 : TSV
-try {
-const r = await fetch(csvUrl.replace('output=csv','output=tsv'));
-if(r.ok) { const d = parseEmails(await r.text(), '\t'); if(d.total) return d; }
-} catch(e) {}
-
-// Méthode 3 : JSONP Google Visualization (SELECT A, B for status)
-try {
-const m = csvUrl.match(/\/d\/e\/(2PACX[^/]+)\//);
-const g = csvUrl.match(/gid=(\d+)/);
-if(m) {
-const data = await new Promise((resolve, reject) => {
-const cb = 'avs_' + Math.random().toString(36).slice(2);
-const to = setTimeout(() => { delete window[cb]; reject('timeout'); }, 6000);
-window[cb] = function(resp) {
-clearTimeout(to); delete window[cb];
-const active = [], inactive = [];
-try {
-if(resp && resp.table && resp.table.rows) {
-resp.table.rows.forEach(row => {
-if(!row.c) return;
-
-// Full row: A=0, B=1, C=2, D=3, E=4, ... M=12, N=13, S=18, T=19, V=21, W=22
-const colM = (row.c[12] && row.c[12].v) ? String(row.c[12].v).trim() : '';
-const colN = (row.c[13] && row.c[13].v) ? String(row.c[13].v).trim() : '';
-const colE = (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '';
-const colS = (row.c[18] && row.c[18].v) ? String(row.c[18].v).trim() : '';
-const colT = (row.c[19] && row.c[19].v) ? String(row.c[19].v).trim() : '';
-const colV = (row.c[21] && row.c[21].v) ? String(row.c[21].v).trim() : '';
-const colW = (row.c[22] && row.c[22].v) ? String(row.c[22].v).trim() : '';
-
-// Videos from S/T
-if(colS && colT) {
-const vKey = colS.toUpperCase();
-if(vKey.startsWith('VF_')) { appFormations.freeVideos.push(colT); }
-else if(vKey.startsWith('VP_')) { appFormations.premiumVideos.push(colT); }
-}
-
-// PDFs from V/W
-if(colV && colW) {
-const pKey = colV.toUpperCase();
-if(pKey.startsWith('PF_')) { appFormations.freePdfs.push(colW); }
-else if(pKey.startsWith('PP_')) { appFormations.premiumPdfs.push(colW); }
-}
-
-// Config from M/N
-if(colM && colN) {
-const key = colM.toUpperCase();
-if(key === 'VIDEO_URL') { appVideoUrl = colN; updateVideoEmbed(); }
-else if(key === 'ANNONCE') { appAnnonce = colN; }
-else if(key === 'ANNONCE_LIEN') { appAnnonceLien = colN; }
-else if(key === 'ANNONCE_COULEUR') { appAnnonceCouleur = colN; }
-else if(key === 'SNAP_ID' || key === 'SNAP_MENSUEL') { appSnaps.mensuel = colN; }
-else if(key === 'SNAP_TRIMESTRIEL') { appSnaps.trimestriel = colN; }
-else if(key === 'SNAP_ANNUEL') { appSnaps.annuel = colN; }
-else if(key === 'PRIX_MENSUEL') { appPrices.mensuel = colN; }
-else if(key === 'PRIX_TRIMESTRIEL') { appPrices.trimestriel = colN; }
-else if(key === 'PRIX_ANNUEL') { appPrices.annuel = colN; }
-else if(key.startsWith('AVIS_')) { appAvis.push(colN); }
-}
-
-if(!row.c[0] || !row.c[0].v) return;
-const email = String(row.c[0].v).trim().toLowerCase();
-if(!email.includes('@') || !email.includes('.')) return;
-const statut = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim().toLowerCase() : '';
-
-// Column E (index 4) = date expiration
-if(colE && email) { emailExpirations[email] = colE; }
-
-if(statut === 'inactif' || statut === 'inactive' || statut === 'désactivé' || statut === 'non') {
-inactive.push(email);
-} else if(colE && isExpired(colE)) {
-inactive.push(email);
-} else {
-active.push(email);
-}
-});
-}
-} catch(e) {}
-resolve({ active, inactive, total: active.length + inactive.length });
-};
-const s = document.createElement('script');
-s.src = 'https://docs.google.com/spreadsheets/d/e/'+m[1]+'/gviz/tq?tqx=responseHandler:'+cb+'&gid='+(g?g[1]:'0');
-s.onerror = () => { clearTimeout(to); delete window[cb]; reject('err'); };
-document.head.appendChild(s);
-setTimeout(() => s.remove(), 8000);
-});
-if(data.total) return data;
-}
-} catch(e) {}
-
-// Méthode 4 : Proxy CORS
-for(const proxy of ['https://corsproxy.io/?url=','https://api.codetabs.com/v1/proxy?quest=']) {
-try {
-const r = await fetch(proxy + encodeURIComponent(csvUrl));
-if(r.ok) { const d = parseEmails(await r.text(), ','); if(d.total) return d; }
-} catch(e) {}
-}
-
-return null;
-}
-
-// Parse CSV/TSV: returns {active: [emails], inactive: [emails], expirations: {email: dateStr}}
-let appVideoUrl = ''; // Video URL from Google Sheet
-let appAnnonce = ''; // Announcement text
-let appAnnonceLien = ''; // Announcement link
-let appAnnonceCouleur = ''; // Announcement color
-let appAvis = []; // Testimonials array
+// State variables (must be declared before fetchFromGoogleSheet uses them)
+let appVideoUrl = '';
+let appAnnonce = '';
+let appAnnonceLien = '';
+let appAnnonceCouleur = '';
+let appAvis = [];
 let appFormations = { freeVideos: [], premiumVideos: [], freePdfs: [], premiumPdfs: [] };
-let appSnaps = { mensuel: '', trimestriel: '', annuel: '' }; // Snap IDs per tier
-let appPrices = { mensuel: '3500', trimestriel: '9000', annuel: '30000' }; // Default prices
-let currentSubTier = 'mensuel'; // Current selected tier
-let emailExpirations = {}; // {email: 'YYYY-MM-DD'}
+let appSnaps = { mensuel: '', trimestriel: '', annuel: '' };
+let appPrices = { mensuel: '3500', trimestriel: '9000', annuel: '30000' };
+let currentSubTier = 'mensuel';
+let emailExpirations = {};
 
-function parseEmails(text, sep) {
+async function fetchFromGoogleSheet() {
+// Wait for Firebase to be ready
+if(!window.firebaseReady) {
+await new Promise(resolve => {
+if(window.firebaseReady) return resolve();
+window.addEventListener('firebase-ready', resolve, { once: true });
+setTimeout(resolve, 5000); // Fallback timeout
+});
+}
+if(!window.fbDb) return null;
+
 const active = [], inactive = [];
 emailExpirations = {};
 appAvis = [];
 appFormations = { freeVideos: [], premiumVideos: [], freePdfs: [], premiumPdfs: [] };
-for(const line of text.split('\n')) {
-const cols = line.split(sep).map(c => c.trim().replace(/"/g,'').replace(/\r/g,''));
 
-// Direct reading of S/T (videos) and V/W (pdfs) - S=18, T=19, V=21, W=22
-const colS = (cols[18] || '').trim().toUpperCase();
-const colT = (cols[19] || '').trim();
-if(colS && colT) {
-if(colS.startsWith('VF_')) appFormations.freeVideos.push(colT);
-else if(colS.startsWith('VP_')) appFormations.premiumVideos.push(colT);
-}
-const colV = (cols[21] || '').trim().toUpperCase();
-const colW = (cols[22] || '').trim();
-if(colV && colW) {
-if(colV.startsWith('PF_')) appFormations.freePdfs.push(colW);
-else if(colV.startsWith('PP_')) appFormations.premiumPdfs.push(colW);
-}
+try {
+// 1. Read all subscribers
+const subsSnap = await window.fbGetDocs(window.fbCollection(window.fbDb, 'subscribers'));
+subsSnap.forEach(docSnap => {
+const data = docSnap.data();
+const email = (data.email || '').toLowerCase().trim();
+if(!email || !email.includes('@')) return;
 
-// Scan ALL column pairs for config keys (M/N = index 12/13)
-for(let i = 2; i < cols.length - 1; i++) {
-const possibleKey = (cols[i] || '').trim().toUpperCase();
-const possibleVal = (cols[i+1] || '').trim();
-if(!possibleKey || !possibleVal) continue;
-if(possibleKey === 'VIDEO_URL') { appVideoUrl = possibleVal; updateVideoEmbed(); break; }
-else if(possibleKey === 'ANNONCE') { appAnnonce = possibleVal; updateAnnonce(); break; }
-else if(possibleKey === 'ANNONCE_LIEN') { appAnnonceLien = possibleVal; break; }
-else if(possibleKey === 'ANNONCE_COULEUR') { appAnnonceCouleur = possibleVal; break; }
-else if(possibleKey === 'SNAP_ID' || possibleKey === 'SNAP_MENSUEL') { appSnaps.mensuel = possibleVal; break; }
-else if(possibleKey === 'SNAP_TRIMESTRIEL') { appSnaps.trimestriel = possibleVal; break; }
-else if(possibleKey === 'SNAP_ANNUEL') { appSnaps.annuel = possibleVal; break; }
-else if(possibleKey === 'PRIX_MENSUEL') { appPrices.mensuel = possibleVal; break; }
-else if(possibleKey === 'PRIX_TRIMESTRIEL') { appPrices.trimestriel = possibleVal; break; }
-else if(possibleKey === 'PRIX_ANNUEL') { appPrices.annuel = possibleVal; break; }
-else if(possibleKey.startsWith('AVIS_')) { appAvis.push(possibleVal); break; }
+const statut = (data.statut || '').toString().toUpperCase();
+let expDateStr = '';
+if(data.expiration) {
+// Firestore Timestamp -> Date
+const expDate = data.expiration.toDate ? data.expiration.toDate() : new Date(data.expiration);
+expDateStr = expDate.getDate().toString().padStart(2,'0') + '/' + (expDate.getMonth()+1).toString().padStart(2,'0') + '/' + expDate.getFullYear();
+emailExpirations[email] = expDateStr;
 }
 
-const email = (cols[0] || '').toLowerCase();
-if(!email.includes('@') || !email.includes('.') || email.startsWith('email')) continue;
+const isInactive = (statut === 'INACTIF' || statut === 'INACTIVE' || statut === 'DESACTIVE' || statut === 'DISABLED');
+const isExpiredFlag = expDateStr && isExpired(expDateStr);
 
-const statut = (cols[1] || '').trim().toLowerCase();
-
-// Column E (index 4) = date d'expiration
-const expRaw = (cols[4] || '').trim();
-if(expRaw && email) {
-emailExpirations[email] = expRaw;
-}
-
-if(statut === 'inactif' || statut === 'inactive' || statut === 'désactivé' || statut === 'disabled' || statut === 'non') {
-inactive.push(email);
-} else {
-// Vérifier si l'abonnement a expiré via la date
-if(expRaw && isExpired(expRaw)) {
+if(isInactive || isExpiredFlag) {
 inactive.push(email);
 } else {
 active.push(email);
 }
+});
+
+// 2. Read config (single document "main")
+try {
+const configSnap = await window.fbGetDoc(window.fbDoc(window.fbDb, 'config', 'main'));
+if(configSnap.exists()) {
+const c = configSnap.data();
+if(c.video_url) { appVideoUrl = c.video_url; }
+if(c.annonce) { appAnnonce = c.annonce; }
+if(c.annonce_lien) { appAnnonceLien = c.annonce_lien; }
+if(c.annonce_couleur) { appAnnonceCouleur = c.annonce_couleur; }
+if(c.snap_mensuel) { appSnaps.mensuel = c.snap_mensuel; }
+if(c.snap_trimestriel) { appSnaps.trimestriel = c.snap_trimestriel; }
+if(c.snap_annuel) { appSnaps.annuel = c.snap_annuel; }
+if(c.prix_mensuel) { appPrices.mensuel = String(c.prix_mensuel); }
+if(c.prix_trimestriel) { appPrices.trimestriel = String(c.prix_trimestriel); }
+if(c.prix_annuel) { appPrices.annuel = String(c.prix_annuel); }
 }
+} catch(e) { console.warn('Config fetch error:', e); }
+
+// 3. Read formations (videos and PDFs)
+try {
+const formSnap = await window.fbGetDocs(window.fbCollection(window.fbDb, 'formations'));
+const formationsList = [];
+formSnap.forEach(d => formationsList.push(d.data()));
+// Sort by ordre field
+formationsList.sort((a,b) => (a.ordre || 999) - (b.ordre || 999));
+formationsList.forEach(f => {
+const item = `${f.titre || ''}|${f.url || ''}|${f.description || ''}`;
+if(f.type === 'video') {
+if(f.premium) appFormations.premiumVideos.push(item);
+else appFormations.freeVideos.push(item);
+} else if(f.type === 'pdf') {
+if(f.premium) appFormations.premiumPdfs.push(item);
+else appFormations.freePdfs.push(item);
 }
+});
+} catch(e) { console.warn('Formations fetch error:', e); }
+
+// 4. Read testimonials (optional)
+try {
+const testSnap = await window.fbGetDocs(window.fbCollection(window.fbDb, 'testimonials'));
+testSnap.forEach(d => {
+const t = d.data();
+if(t.texte) appAvis.push(t.texte);
+});
+} catch(e) {}
+
 return { active, inactive, total: active.length + inactive.length };
+
+} catch(err) {
+console.error('Firebase fetch error:', err);
+// Fallback to LOCAL_EMAILS
+const fallbackActive = LOCAL_EMAILS.map(e => e.toLowerCase().trim()).filter(e => e.includes('@'));
+return { active: fallbackActive, inactive: [], total: fallbackActive.length };
 }
+}
+
 
 function isExpired(dateStr) {
 if(!dateStr) return false;
