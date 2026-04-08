@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AviaScan Admin — HORIZON AGRO-PASTORAL</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; }
+body { background: #F5F5F0; min-height: 100vh; padding: 20px; color: #2C2C2A; }
+.container { max-width: 1100px; margin: 0 auto; }
+.header { background: linear-gradient(135deg, #0B4F6C, #062A3E); color: #fff; padding: 24px; border-radius: 16px; margin-bottom: 20px; }
+.header h1 { font-size: 24px; margin-bottom: 6px; }
+.header p { opacity: 0.85; font-size: 14px; }
+.login-box { background: #fff; padding: 32px; border-radius: 16px; max-width: 400px; margin: 80px auto; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+.login-box h2 { font-size: 20px; margin-bottom: 16px; color: #0B4F6C; }
+.login-box input { width: 100%; padding: 12px 16px; border: 2px solid #E5E5E0; border-radius: 10px; font-size: 14px; margin-bottom: 12px; }
+.login-box button { width: 100%; padding: 14px; background: #0B4F6C; color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; }
+.login-box button:hover { background: #062A3E; }
+.tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.tab { padding: 10px 18px; background: #fff; border: 1px solid #E5E5E0; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s; }
+.tab.active { background: #0B4F6C; color: #fff; border-color: #0B4F6C; }
+.card { background: #fff; padding: 24px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+.card h2 { font-size: 18px; color: #0B4F6C; margin-bottom: 16px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.form-row.full { grid-template-columns: 1fr; }
+.form-group label { display: block; font-size: 12px; font-weight: 700; color: #5F5E5A; margin-bottom: 4px; text-transform: uppercase; }
+.form-group input, .form-group select { width: 100%; padding: 10px 14px; border: 2px solid #E5E5E0; border-radius: 8px; font-size: 14px; }
+.btn { padding: 12px 24px; background: #1B5E20; color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 14px; }
+.btn-danger { background: #C0392B; }
+.btn-warning { background: #E8872A; }
+.btn-secondary { background: #888780; }
+.btn:hover { opacity: 0.9; }
+.btn-small { padding: 6px 14px; font-size: 12px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 12px; text-align: left; border-bottom: 1px solid #E5E5E0; font-size: 13px; }
+th { background: #F5F5F0; font-weight: 700; color: #5F5E5A; font-size: 11px; text-transform: uppercase; }
+.status-badge { display: inline-block; padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.status-actif { background: #D4EDDA; color: #155724; }
+.status-inactif { background: #F8D7DA; color: #721C24; }
+.status-expire { background: #FFF3CD; color: #856404; }
+.toast { position: fixed; top: 20px; right: 20px; background: #155724; color: #fff; padding: 14px 20px; border-radius: 10px; z-index: 1000; opacity: 0; transition: opacity 0.3s; }
+.toast.show { opacity: 1; }
+.toast.error { background: #C0392B; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.stat-card { background: #fff; padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.stat-card .num { font-size: 28px; font-weight: 800; color: #0B4F6C; }
+.stat-card .label { font-size: 12px; color: #888780; text-transform: uppercase; margin-top: 4px; }
+.empty { text-align: center; padding: 40px; color: #888780; }
+@media (max-width: 700px) { .form-row { grid-template-columns: 1fr; } table { font-size: 12px; } th, td { padding: 8px; } }
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+<div class="login-box">
+<h2>🔐 Admin AviaScan</h2>
+<p style="font-size:13px;color:#888780;margin-bottom:16px;">Entrez le mot de passe administrateur</p>
+<input type="password" id="passwordInput" placeholder="Mot de passe" onkeypress="if(event.key==='Enter')login()">
+<button onclick="login()">Se connecter</button>
+</div>
+</div>
+
+<div id="adminScreen" style="display:none;">
+<div class="container">
+<div class="header">
+<h1>🌾 AviaScan Admin</h1>
+<p>Gestion des abonnés et configuration — HORIZON AGRO-PASTORAL</p>
+</div>
+
+<div class="stats" id="statsContainer"></div>
+
+<div class="tabs">
+<button class="tab active" onclick="switchTab(this,'subscribers')">👥 Abonnés</button>
+<button class="tab" onclick="switchTab(this,'add')">➕ Ajouter abonné</button>
+<button class="tab" onclick="switchTab(this,'config')">⚙️ Configuration</button>
+<button class="tab" onclick="switchTab(this,'formations')">🎓 Formations</button>
+</div>
+
+<!-- TAB: SUBSCRIBERS -->
+<div id="tab-subscribers" class="tab-content">
+<div class="card">
+<h2>Liste des abonnés</h2>
+<input type="text" id="searchInput" placeholder="🔍 Rechercher par email..." style="width:100%;padding:10px 14px;border:2px solid #E5E5E0;border-radius:8px;margin-bottom:12px;font-size:14px;" oninput="renderSubscribers()">
+<div id="subscribersList"><div class="empty">Chargement...</div></div>
+</div>
+</div>
+
+<!-- TAB: ADD SUBSCRIBER -->
+<div id="tab-add" class="tab-content" style="display:none;">
+<div class="card">
+<h2>Ajouter un nouvel abonné</h2>
+<div class="form-row">
+<div class="form-group">
+<label>Email *</label>
+<input type="email" id="newEmail" placeholder="client@gmail.com">
+</div>
+<div class="form-group">
+<label>Nom complet</label>
+<input type="text" id="newNom" placeholder="Jean Doe">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Type d'abonnement</label>
+<select id="newTier" onchange="updateExpiration()">
+<option value="mensuel">Mensuel (1 mois)</option>
+<option value="trimestriel">Trimestriel (3 mois)</option>
+<option value="annuel">Annuel (12 mois)</option>
+</select>
+</div>
+<div class="form-group">
+<label>Statut</label>
+<select id="newStatut">
+<option value="ACTIF">ACTIF</option>
+<option value="INACTIF">INACTIF</option>
+</select>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Date d'expiration *</label>
+<input type="date" id="newExpiration">
+</div>
+<div class="form-group">
+<label>&nbsp;</label>
+<button class="btn" onclick="addSubscriber()" style="width:100%;">✅ Ajouter l'abonné</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- TAB: CONFIG -->
+<div id="tab-config" class="tab-content" style="display:none;">
+<div class="card">
+<h2>Configuration générale</h2>
+<div class="form-row">
+<div class="form-group">
+<label>Prix mensuel (FCFA)</label>
+<input type="number" id="cfgPrixM" placeholder="3500">
+</div>
+<div class="form-group">
+<label>Prix trimestriel (FCFA)</label>
+<input type="number" id="cfgPrixT" placeholder="9000">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Prix annuel (FCFA)</label>
+<input type="number" id="cfgPrixA" placeholder="30000">
+</div>
+<div class="form-group">
+<label>Annonce (texte)</label>
+<input type="text" id="cfgAnnonce" placeholder="Bienvenue sur AviaScan">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Snap Mensuel (Chariow)</label>
+<input type="text" id="cfgSnapM" placeholder="prd_xxx">
+</div>
+<div class="form-group">
+<label>Snap Trimestriel (Chariow)</label>
+<input type="text" id="cfgSnapT" placeholder="prd_yyy">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Snap Annuel (Chariow)</label>
+<input type="text" id="cfgSnapA" placeholder="prd_zzz">
+</div>
+<div class="form-group">
+<label>Couleur annonce</label>
+<input type="text" id="cfgCouleur" placeholder="#E8872A">
+</div>
+</div>
+<div style="margin-top:16px;">
+<button class="btn" onclick="saveConfig()">💾 Sauvegarder la configuration</button>
+</div>
+</div>
+</div>
+
+<!-- TAB: FORMATIONS -->
+<div id="tab-formations" class="tab-content" style="display:none;">
+<div class="card">
+<h2>Ajouter une vidéo / PDF</h2>
+<div class="form-row">
+<div class="form-group">
+<label>Type</label>
+<select id="formType">
+<option value="video">🎬 Vidéo YouTube</option>
+<option value="pdf">📄 PDF (Google Drive)</option>
+</select>
+</div>
+<div class="form-group">
+<label>Premium ?</label>
+<select id="formPremium">
+<option value="false">Non (gratuit pour tous)</option>
+<option value="true">Oui (réservé abonnés)</option>
+</select>
+</div>
+</div>
+<div class="form-row full">
+<div class="form-group">
+<label>Titre *</label>
+<input type="text" id="formTitre" placeholder="Comment démarrer un élevage">
+</div>
+</div>
+<div class="form-row full">
+<div class="form-group">
+<label>URL *</label>
+<input type="text" id="formUrl" placeholder="https://youtube.com/watch?v=xxx ou https://drive.google.com/...">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Description courte</label>
+<input type="text" id="formDesc" placeholder="Les bases pour les débutants">
+</div>
+<div class="form-group">
+<label>Ordre d'affichage</label>
+<input type="number" id="formOrdre" placeholder="1" value="1">
+</div>
+</div>
+<div style="margin-top:16px;">
+<button class="btn" onclick="addFormation()">✅ Ajouter</button>
+</div>
+</div>
+
+<div class="card">
+<h2>Liste des formations</h2>
+<div id="formationsList"><div class="empty">Chargement...</div></div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, deleteDoc, updateDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyDhWj7XlPQJt-GI9ntfsMC9ltvqE2Tuhx4",
+authDomain: "aviascan-horizon.firebaseapp.com",
+projectId: "aviascan-horizon",
+storageBucket: "aviascan-horizon.firebasestorage.app",
+messagingSenderId: "882712428228",
+appId: "1:882712428228:web:7f140e641bd5a9b08f5391"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.fb = { db, collection, doc, getDoc, getDocs, setDoc, addDoc, deleteDoc, updateDoc, Timestamp };
+window.dispatchEvent(new Event('fbReady'));
+</script>
+
+<script>
+// Change this password ! Use a strong one in production
+const ADMIN_PASSWORD = 'aviascan2026';
+
+let allSubscribers = [];
+let allFormations = [];
+
+function login() {
+const pwd = document.getElementById('passwordInput').value;
+if(pwd === ADMIN_PASSWORD) {
+sessionStorage.setItem('admin_logged', '1');
+showAdmin();
+} else {
+showToast('❌ Mot de passe incorrect', true);
+}
+}
+
+function showAdmin() {
+document.getElementById('loginScreen').style.display = 'none';
+document.getElementById('adminScreen').style.display = 'block';
+loadAll();
+}
+
+function logout() {
+sessionStorage.removeItem('admin_logged');
+location.reload();
+}
+
+function showToast(msg, isError) {
+const t = document.getElementById('toast');
+t.textContent = msg;
+t.className = 'toast show' + (isError ? ' error' : '');
+setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function switchTab(btn, tab) {
+document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+btn.classList.add('active');
+document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+document.getElementById('tab-' + tab).style.display = 'block';
+if(tab === 'config') loadConfig();
+if(tab === 'formations') renderFormationsList();
+}
+
+function updateExpiration() {
+const tier = document.getElementById('newTier').value;
+const months = tier === 'annuel' ? 12 : tier === 'trimestriel' ? 3 : 1;
+const date = new Date();
+date.setMonth(date.getMonth() + months);
+document.getElementById('newExpiration').value = date.toISOString().split('T')[0];
+}
+
+async function loadAll() {
+await loadSubscribers();
+}
+
+async function loadSubscribers() {
+try {
+const snap = await window.fb.getDocs(window.fb.collection(window.fb.db, 'subscribers'));
+allSubscribers = [];
+snap.forEach(d => allSubscribers.push({ id: d.id, ...d.data() }));
+renderSubscribers();
+renderStats();
+} catch(e) {
+document.getElementById('subscribersList').innerHTML = '<div class="empty">❌ Erreur Firebase: ' + e.message + '</div>';
+}
+}
+
+function renderStats() {
+const total = allSubscribers.length;
+const now = new Date();
+let actifs = 0, inactifs = 0, expires = 0;
+allSubscribers.forEach(s => {
+const statut = (s.statut || '').toUpperCase();
+const exp = s.expiration?.toDate ? s.expiration.toDate() : (s.expiration ? new Date(s.expiration) : null);
+const isExpired = exp && exp < now;
+if(statut === 'INACTIF' || statut === 'INACTIVE') inactifs++;
+else if(isExpired) expires++;
+else actifs++;
+});
+document.getElementById('statsContainer').innerHTML =
+'<div class="stat-card"><div class="num">' + total + '</div><div class="label">Total</div></div>' +
+'<div class="stat-card"><div class="num" style="color:#1B5E20">' + actifs + '</div><div class="label">Actifs</div></div>' +
+'<div class="stat-card"><div class="num" style="color:#E8872A">' + expires + '</div><div class="label">Expirés</div></div>' +
+'<div class="stat-card"><div class="num" style="color:#C0392B">' + inactifs + '</div><div class="label">Inactifs</div></div>';
+}
+
+function renderSubscribers() {
+const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+const filtered = allSubscribers.filter(s => !search || (s.email || '').toLowerCase().includes(search) || (s.nom || '').toLowerCase().includes(search));
+if(!filtered.length) {
+document.getElementById('subscribersList').innerHTML = '<div class="empty">Aucun abonné trouvé</div>';
+return;
+}
+const now = new Date();
+let h = '<table><thead><tr><th>Email</th><th>Nom</th><th>Tier</th><th>Statut</th><th>Expiration</th><th>Actions</th></tr></thead><tbody>';
+filtered.forEach(s => {
+const exp = s.expiration?.toDate ? s.expiration.toDate() : (s.expiration ? new Date(s.expiration) : null);
+const expStr = exp ? exp.toLocaleDateString('fr-FR') : '—';
+const isExpired = exp && exp < now;
+const statut = (s.statut || 'ACTIF').toUpperCase();
+let badgeClass = 'status-actif', badgeText = 'ACTIF';
+if(statut === 'INACTIF' || statut === 'INACTIVE') { badgeClass = 'status-inactif'; badgeText = 'INACTIF'; }
+else if(isExpired) { badgeClass = 'status-expire'; badgeText = 'EXPIRÉ'; }
+h += '<tr><td>' + (s.email || '') + '</td><td>' + (s.nom || '—') + '</td><td>' + (s.tier || 'mensuel') + '</td><td><span class="status-badge ' + badgeClass + '">' + badgeText + '</span></td><td>' + expStr + '</td><td><button class="btn btn-warning btn-small" onclick="extendSub(\'' + s.id + '\')">+1 mois</button> <button class="btn btn-danger btn-small" onclick="deleteSub(\'' + s.id + '\')">Suppr</button></td></tr>';
+});
+h += '</tbody></table>';
+document.getElementById('subscribersList').innerHTML = h;
+}
+
+async function addSubscriber() {
+const email = document.getElementById('newEmail').value.trim().toLowerCase();
+const nom = document.getElementById('newNom').value.trim();
+const tier = document.getElementById('newTier').value;
+const statut = document.getElementById('newStatut').value;
+const expDate = document.getElementById('newExpiration').value;
+if(!email || !email.includes('@')) { showToast('❌ Email invalide', true); return; }
+if(!expDate) { showToast('❌ Date d\'expiration requise', true); return; }
+try {
+await window.fb.addDoc(window.fb.collection(window.fb.db, 'subscribers'), {
+email, nom, tier, statut,
+expiration: window.fb.Timestamp.fromDate(new Date(expDate)),
+date_ajout: window.fb.Timestamp.now()
+});
+showToast('✅ Abonné ajouté !');
+document.getElementById('newEmail').value = '';
+document.getElementById('newNom').value = '';
+document.getElementById('newExpiration').value = '';
+await loadSubscribers();
+} catch(e) {
+showToast('❌ Erreur: ' + e.message, true);
+}
+}
+
+async function extendSub(id) {
+const sub = allSubscribers.find(s => s.id === id);
+if(!sub) return;
+const currentExp = sub.expiration?.toDate ? sub.expiration.toDate() : new Date();
+const newExp = new Date(currentExp);
+if(newExp < new Date()) newExp.setTime(Date.now());
+newExp.setMonth(newExp.getMonth() + 1);
+try {
+await window.fb.updateDoc(window.fb.doc(window.fb.db, 'subscribers', id), {
+expiration: window.fb.Timestamp.fromDate(newExp),
+statut: 'ACTIF'
+});
+showToast('✅ Abonnement prolongé !');
+await loadSubscribers();
+} catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+async function deleteSub(id) {
+if(!confirm('Supprimer cet abonné ?')) return;
+try {
+await window.fb.deleteDoc(window.fb.doc(window.fb.db, 'subscribers', id));
+showToast('🗑️ Supprimé');
+await loadSubscribers();
+} catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+async function loadConfig() {
+try {
+const snap = await window.fb.getDoc(window.fb.doc(window.fb.db, 'config', 'main'));
+if(snap.exists()) {
+const c = snap.data();
+document.getElementById('cfgPrixM').value = c.prix_mensuel || '';
+document.getElementById('cfgPrixT').value = c.prix_trimestriel || '';
+document.getElementById('cfgPrixA').value = c.prix_annuel || '';
+document.getElementById('cfgAnnonce').value = c.annonce || '';
+document.getElementById('cfgSnapM').value = c.snap_mensuel || '';
+document.getElementById('cfgSnapT').value = c.snap_trimestriel || '';
+document.getElementById('cfgSnapA').value = c.snap_annuel || '';
+document.getElementById('cfgCouleur').value = c.annonce_couleur || '';
+}
+} catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+async function saveConfig() {
+try {
+await window.fb.setDoc(window.fb.doc(window.fb.db, 'config', 'main'), {
+prix_mensuel: parseInt(document.getElementById('cfgPrixM').value) || 3500,
+prix_trimestriel: parseInt(document.getElementById('cfgPrixT').value) || 9000,
+prix_annuel: parseInt(document.getElementById('cfgPrixA').value) || 30000,
+annonce: document.getElementById('cfgAnnonce').value,
+snap_mensuel: document.getElementById('cfgSnapM').value,
+snap_trimestriel: document.getElementById('cfgSnapT').value,
+snap_annuel: document.getElementById('cfgSnapA').value,
+annonce_couleur: document.getElementById('cfgCouleur').value
+});
+showToast('✅ Configuration sauvegardée !');
+} catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+async function addFormation() {
+const titre = document.getElementById('formTitre').value.trim();
+const url = document.getElementById('formUrl').value.trim();
+if(!titre || !url) { showToast('❌ Titre et URL requis', true); return; }
+try {
+await window.fb.addDoc(window.fb.collection(window.fb.db, 'formations'), {
+type: document.getElementById('formType').value,
+premium: document.getElementById('formPremium').value === 'true',
+titre: titre,
+url: url,
+description: document.getElementById('formDesc').value,
+ordre: parseInt(document.getElementById('formOrdre').value) || 1
+});
+showToast('✅ Formation ajoutée !');
+document.getElementById('formTitre').value = '';
+document.getElementById('formUrl').value = '';
+document.getElementById('formDesc').value = '';
+await renderFormationsList();
+} catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+async function renderFormationsList() {
+try {
+const snap = await window.fb.getDocs(window.fb.collection(window.fb.db, 'formations'));
+allFormations = [];
+snap.forEach(d => allFormations.push({ id: d.id, ...d.data() }));
+if(!allFormations.length) {
+document.getElementById('formationsList').innerHTML = '<div class="empty">Aucune formation</div>';
+return;
+}
+allFormations.sort((a,b) => (a.ordre || 999) - (b.ordre || 999));
+let h = '<table><thead><tr><th>Type</th><th>Titre</th><th>Premium</th><th>Ordre</th><th>Action</th></tr></thead><tbody>';
+allFormations.forEach(f => {
+h += '<tr><td>' + (f.type === 'video' ? '🎬' : '📄') + ' ' + f.type + '</td><td>' + (f.titre || '') + '</td><td>' + (f.premium ? '⭐ Oui' : 'Non') + '</td><td>' + (f.ordre || '—') + '</td><td><button class="btn btn-danger btn-small" onclick="deleteFormation(\'' + f.id + '\')">Suppr</button></td></tr>';
+});
+h += '</tbody></table>';
+document.getElementById('formationsList').innerHTML = h;
+} catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+async function deleteFormation(id) {
+if(!confirm('Supprimer cette formation ?')) return;
+try {
+await window.fb.deleteDoc(window.fb.doc(window.fb.db, 'formations', id));
+showToast('🗑️ Supprimé');
+await renderFormationsList();
+} catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+// Make functions global
+window.login = login;
+window.switchTab = switchTab;
+window.updateExpiration = updateExpiration;
+window.addSubscriber = addSubscriber;
+window.extendSub = extendSub;
+window.deleteSub = deleteSub;
+window.saveConfig = saveConfig;
+window.addFormation = addFormation;
+window.deleteFormation = deleteFormation;
+window.renderSubscribers = renderSubscribers;
+
+// Auto-login if already logged in
+window.addEventListener('fbReady', () => {
+if(sessionStorage.getItem('admin_logged') === '1') showAdmin();
+});
+updateExpiration();
+</script>
+</body>
+</html>
