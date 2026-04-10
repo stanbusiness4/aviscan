@@ -970,24 +970,14 @@ Déjà abonné ? <a onclick="closePaymentModal();openAuthModal()">Se connecter a
 
 <!-- STEP 1 -->
 <div class="section active" id="section-0">
-<h2 class="section-title">📋 Informations sur votre élevage</h2>
-<p class="section-sub">Plus vous renseignez d'informations, plus le diagnostic sera précis. Les champs marqués * sont obligatoires.</p>
+<h2 class="section-title">🩺 Diagnostic rapide</h2>
+<p class="section-sub">Répondez à 3 questions et sélectionnez les symptômes. Résultat en 30 secondes.</p>
 
-<div class="form-progress">
-<span id="formProgressText">0%</span>
-<div class="form-progress-bar"><div class="form-progress-fill" id="formProgressFill" style="width:0%"></div></div>
-</div>
-
-<!-- Section 1: Localisation -->
-<div class="form-section open" id="fs-location">
-<div class="form-section-header" onclick="toggleFormSection('fs-location')">
-<span class="fs-icon">📍</span> Localisation *
-<span class="fs-arrow">▼</span><span class="fs-check">✓</span>
-</div>
-<div class="form-section-body">
-<label>Pays *</label>
-<select id="country" onchange="updateRegions();updateFormProgress()">
-<option value="">— Sélectionnez votre pays —</option>
+<!-- 3 questions essentielles -->
+<div style="background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:12px;">
+<label style="font-size:13px;font-weight:700;color:var(--text-mid);margin-bottom:6px;display:block;">📍 Pays *</label>
+<select id="country" onchange="updateRegions();checkQuickForm()" style="width:100%;padding:12px;border:2px solid var(--border);border-radius:10px;font-size:14px;background:var(--card);color:var(--text);">
+<option value="">— Sélectionnez —</option>
 <optgroup label="Afrique de l'Ouest">
 <option value="benin">🇧🇯 Bénin</option>
 <option value="burkina">🇧🇫 Burkina Faso</option>
@@ -1019,193 +1009,90 @@ Déjà abonné ? <a onclick="closePaymentModal();openAuthModal()">Se connecter a
 </optgroup>
 <optgroup label="Autres">
 <option value="haiti">🇭🇹 Haïti</option>
-<option value="autre">🌍 Autre pays</option>
+<option value="france">🇫🇷 France</option>
+<option value="belgique">🇧🇪 Belgique</option>
+<option value="canada">🇨🇦 Canada</option>
 </optgroup>
 </select>
-<label>Région / Ville *</label>
-<select id="region" onchange="updateFormProgress()"><option value="">— Choisissez d'abord un pays —</option></select>
-<label>Saison actuelle</label>
-<div class="chip-select" id="seasonChips">
-<button class="chip-option" onclick="selectChip(this,'season')">☀️ Sèche</button>
-<button class="chip-option" onclick="selectChip(this,'season')">🌧️ Pluies</button>
-<button class="chip-option" onclick="selectChip(this,'season')">🌬️ Harmattan</button>
-<button class="chip-option" onclick="selectChip(this,'season')">🔄 Transition</button>
-</div>
-</div>
+<select id="region" onchange="checkQuickForm()" style="width:100%;padding:12px;border:2px solid var(--border);border-radius:10px;font-size:14px;margin-top:8px;background:var(--card);color:var(--text);">
+<option value="">— Région —</option>
+</select>
 </div>
 
-<!-- Section 2: Le troupeau -->
-<div class="form-section" id="fs-flock">
-<div class="form-section-header" onclick="toggleFormSection('fs-flock')">
-<span class="fs-icon">🐔</span> Le troupeau *
-<span class="fs-arrow">▼</span><span class="fs-check">✓</span>
-</div>
-<div class="form-section-body">
-<label>Type d'élevage *</label>
-<select id="farmType" onchange="updateFormProgress()">
-<option value="backyard">🏠 Élevage familial / Basse-cour</option>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+<div style="background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);border:1px solid var(--border);">
+<label style="font-size:13px;font-weight:700;color:var(--text-mid);margin-bottom:6px;display:block;">🐔 Type *</label>
+<select id="farmType" onchange="checkQuickForm()" style="width:100%;padding:10px;border:2px solid var(--border);border-radius:10px;font-size:13px;background:var(--card);color:var(--text);">
+<option value="backyard">🏠 Basse-cour</option>
 <option value="semi">🏗️ Semi-intensif</option>
-<option value="intensive">🏭 Intensif / Industriel</option>
+<option value="intensive">🏭 Intensif</option>
 </select>
-<label>Race / Souche des poulets</label>
-<select id="poultryBreed" onchange="updateFormProgress()">
-<option value="">— Sélectionnez (facultatif) —</option>
-<optgroup label="Poulets de chair">
-<option value="cobb500">Cobb 500</option>
-<option value="ross308">Ross 308</option>
-<option value="hubbard">Hubbard</option>
-<option value="arbor">Arbor Acres</option>
-<option value="sasso">Sasso (double usage)</option>
-</optgroup>
-<optgroup label="Pondeuses">
-<option value="isabrown">Isa Brown</option>
-<option value="lohmann">Lohmann Brown</option>
-<option value="hyline">Hy-Line</option>
-<option value="novogen">Novogen</option>
-<option value="harco">Harco</option>
-</optgroup>
-<optgroup label="Races locales">
-<option value="locale">Race locale (non améliorée)</option>
-<option value="localeamelioree">Race locale améliorée</option>
-<option value="bicyclette">Poulet bicyclette</option>
-</optgroup>
-<optgroup label="Autre">
-<option value="autre">Autre / Je ne sais pas</option>
-</optgroup>
+</div>
+<div style="background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);border:1px solid var(--border);">
+<label style="font-size:13px;font-weight:700;color:var(--text-mid);margin-bottom:6px;display:block;">📅 Âge *</label>
+<select id="poultryAge" onchange="checkQuickForm()" style="width:100%;padding:10px;border:2px solid var(--border);border-radius:10px;font-size:13px;background:var(--card);color:var(--text);">
+<option value="">— Âge —</option>
+<option value="0-1">🐣 0-1 sem</option>
+<option value="1-3">🐤 1-3 sem</option>
+<option value="3-6">🐥 3-6 sem</option>
+<option value="6-12">🐓 6-12 sem</option>
+<option value="12-20">🐔 12-20 sem</option>
+<option value="20+">🐔 20+ sem</option>
 </select>
-<label>Âge des poulets *</label>
-<select id="poultryAge" onchange="updateFormProgress()">
-<option value="">— Sélectionnez l'âge —</option>
-<option value="0-1">🐣 0 à 1 semaine (poussins)</option>
-<option value="1-3">🐤 1 à 3 semaines (démarrage)</option>
-<option value="3-6">🐥 3 à 6 semaines (croissance)</option>
-<option value="6-12">🐓 6 à 12 semaines (finition)</option>
-<option value="12-20">🐔 12 à 20 semaines (poulettes)</option>
-<option value="20+">🐔 Plus de 20 semaines (adultes)</option>
-</select>
-<div class="form-grid-2">
-<div><label>Sujets malades</label><input type="number" id="sickCount" min="1" placeholder="Ex: 5" oninput="updateFormProgress()"></div>
-<div><label>Taille du troupeau</label><input type="number" id="flockSize" min="1" placeholder="Ex: 100" oninput="updateFormProgress()"></div>
-</div>
-<label>Le problème touche...</label>
-<div class="chip-select" id="spreadChips">
-<button class="chip-option" onclick="selectChip(this,'spread')">🔴 Quelques sujets</button>
-<button class="chip-option" onclick="selectChip(this,'spread')">🟠 Une partie du lot</button>
-<button class="chip-option" onclick="selectChip(this,'spread')">🔴 Tout le lot</button>
-</div>
-<label>Origine des poussins</label>
-<div class="chip-select" id="originChips">
-<button class="chip-option" onclick="selectChip(this,'origin')">🏭 Couvoir agréé</button>
-<button class="chip-option" onclick="selectChip(this,'origin')">🏪 Marché / Revendeur</button>
-<button class="chip-option" onclick="selectChip(this,'origin')">🐣 Auto-reproduction</button>
-<button class="chip-option" onclick="selectChip(this,'origin')">❓ Je ne sais pas</button>
-</div>
 </div>
 </div>
 
-<!-- Section 3: Symptômes temporels & mortalité -->
-<div class="form-section" id="fs-symptoms-time">
-<div class="form-section-header" onclick="toggleFormSection('fs-symptoms-time')">
-<span class="fs-icon">⏱️</span> Apparition & mortalité
-<span class="fs-arrow">▼</span><span class="fs-check">✓</span>
+<button class="btn btn-primary" onclick="goToStep(1)" id="btn-next-1" disabled style="width:100%;padding:16px;font-size:16px;border-radius:12px;">
+🔍 Sélectionner les symptômes →
+</button>
+
+<!-- Section optionnelle dépliable -->
+<div style="margin-top:16px;">
+<div onclick="document.getElementById('optionalFields').style.display = document.getElementById('optionalFields').style.display === 'none' ? 'block' : 'none'; this.querySelector('.opt-arrow').textContent = document.getElementById('optionalFields').style.display === 'none' ? '▶' : '▼';" style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--bg);border-radius:10px;border:1px solid var(--border);">
+<span style="font-size:14px;">⚙️</span>
+<span style="font-size:13px;color:var(--text-mid);flex:1;">Détails supplémentaires (facultatif)</span>
+<span class="opt-arrow" style="font-size:12px;color:var(--text-light);">▶</span>
 </div>
-<div class="form-section-body">
-<label>Depuis quand les symptômes sont apparus ?</label>
-<div class="chip-select" id="onsetChips">
-<button class="chip-option" onclick="selectChip(this,'onset')">⚡ Quelques heures</button>
+
+<div id="optionalFields" style="display:none;margin-top:10px;background:var(--card);border-radius:var(--radius);padding:16px;border:1px solid var(--border);">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+<div><label style="font-size:12px;font-weight:600;color:var(--text-light);">Sujets malades</label><input type="number" id="sickCount" min="1" placeholder="Ex: 5" style="width:100%;padding:10px;border:2px solid var(--border);border-radius:8px;font-size:13px;"></div>
+<div><label style="font-size:12px;font-weight:600;color:var(--text-light);">Taille troupeau</label><input type="number" id="flockSize" min="1" placeholder="Ex: 100" style="width:100%;padding:10px;border:2px solid var(--border);border-radius:8px;font-size:13px;"></div>
+</div>
+<label style="font-size:12px;font-weight:600;color:var(--text-light);">Race / Souche</label>
+<select id="poultryBreed" style="width:100%;padding:10px;border:2px solid var(--border);border-radius:8px;font-size:13px;margin-bottom:10px;background:var(--card);color:var(--text);">
+<option value="">— Facultatif —</option>
+<optgroup label="Chair"><option value="cobb500">Cobb 500</option><option value="ross308">Ross 308</option><option value="hubbard">Hubbard</option><option value="sasso">Sasso</option></optgroup>
+<optgroup label="Pondeuses"><option value="isabrown">Isa Brown</option><option value="lohmann">Lohmann</option><option value="hyline">Hy-Line</option></optgroup>
+<optgroup label="Locales"><option value="locale">Race locale</option><option value="bicyclette">Poulet bicyclette</option></optgroup>
+</select>
+<label style="font-size:12px;font-weight:600;color:var(--text-light);">Depuis quand ?</label>
+<div class="chip-select" id="onsetChips" style="margin-bottom:10px;">
+<button class="chip-option" onclick="selectChip(this,'onset')">⚡ Heures</button>
 <button class="chip-option" onclick="selectChip(this,'onset')">📅 1-2 jours</button>
 <button class="chip-option" onclick="selectChip(this,'onset')">📅 3-5 jours</button>
-<button class="chip-option" onclick="selectChip(this,'onset')">📅 1-2 semaines</button>
-<button class="chip-option" onclick="selectChip(this,'onset')">📅 Plus de 2 semaines</button>
+<button class="chip-option" onclick="selectChip(this,'onset')">📅 1-2 sem</button>
+<button class="chip-option" onclick="selectChip(this,'onset')">📅 +2 sem</button>
 </div>
-<label>Y a-t-il eu des morts ?</label>
-<div class="chip-select" id="deathChips">
-<button class="chip-option" onclick="selectChip(this,'death')">✅ Aucune mort</button>
-<button class="chip-option" onclick="selectChip(this,'death')">⚠️ 1-5 morts</button>
-<button class="chip-option" onclick="selectChip(this,'death')">🔴 6-20 morts</button>
-<button class="chip-option" onclick="selectChip(this,'death')">💀 Plus de 20 morts</button>
-<button class="chip-option" onclick="selectChip(this,'death')">💀 Mortalité massive</button>
+<label style="font-size:12px;font-weight:600;color:var(--text-light);">Mortalité</label>
+<div class="chip-select" id="deathChips" style="margin-bottom:10px;">
+<button class="chip-option" onclick="selectChip(this,'death')">✅ Aucune</button>
+<button class="chip-option" onclick="selectChip(this,'death')">⚠️ 1-5</button>
+<button class="chip-option" onclick="selectChip(this,'death')">🔴 6-20</button>
+<button class="chip-option" onclick="selectChip(this,'death')">💀 20+</button>
 </div>
-<label>Vitesse de propagation</label>
-<div class="chip-select" id="speedChips">
-<button class="chip-option" onclick="selectChip(this,'speed')">🐌 Lente (jours/semaines)</button>
-<button class="chip-option" onclick="selectChip(this,'speed')">⚡ Rapide (heures/1-2 jours)</button>
-<button class="chip-option" onclick="selectChip(this,'speed')">💀 Foudroyante (morts subites)</button>
-</div>
-</div>
-</div>
-
-<!-- Section 4: Environnement & alimentation -->
-<div class="form-section" id="fs-environment">
-<div class="form-section-header" onclick="toggleFormSection('fs-environment')">
-<span class="fs-icon">🏠</span> Environnement & alimentation
-<span class="fs-arrow">▼</span><span class="fs-check">✓</span>
-</div>
-<div class="form-section-body">
-<label>Type de bâtiment</label>
-<div class="chip-select" id="buildingChips">
-<button class="chip-option" onclick="selectChip(this,'building')">🏠 Ouvert (ventilation naturelle)</button>
-<button class="chip-option" onclick="selectChip(this,'building')">🏗️ Semi-fermé</button>
-<button class="chip-option" onclick="selectChip(this,'building')">🏭 Fermé (ventilation contrôlée)</button>
-<button class="chip-option" onclick="selectChip(this,'building')">🌳 Sous arbre / Plein air</button>
-</div>
-<label>Type d'aliment</label>
-<div class="chip-select" id="feedChips">
-<button class="chip-option" onclick="selectChip(this,'feed')">🏭 Provende industrielle</button>
-<button class="chip-option" onclick="selectChip(this,'feed')">🥣 Mélange maison (formule)</button>
-<button class="chip-option" onclick="selectChip(this,'feed')">🍚 Restes de cuisine / Grains</button>
-<button class="chip-option" onclick="selectChip(this,'feed')">🔄 Mixte</button>
-</div>
-<label>Source d'eau</label>
-<div class="chip-select" id="waterChips">
-<button class="chip-option" onclick="selectChip(this,'water')">🚰 Robinet / SONEB</button>
-<button class="chip-option" onclick="selectChip(this,'water')">🕳️ Forage / Pompe</button>
-<button class="chip-option" onclick="selectChip(this,'water')">🪣 Puits</button>
-<button class="chip-option" onclick="selectChip(this,'water')">🏞️ Rivière / Mare</button>
-</div>
-</div>
-</div>
-
-<!-- Section 5: Historique sanitaire -->
-<div class="form-section" id="fs-history">
-<div class="form-section-header" onclick="toggleFormSection('fs-history')">
-<span class="fs-icon">💉</span> Historique sanitaire
-<span class="fs-arrow">▼</span><span class="fs-check">✓</span>
-</div>
-<div class="form-section-body">
-<label>Vaccins déjà administrés</label>
-<div class="chip-select" id="vaccineChips" style="margin-bottom:8px;">
+<label style="font-size:12px;font-weight:600;color:var(--text-light);">Vaccins administrés</label>
+<div class="chip-select" id="vaccineChips" style="margin-bottom:10px;">
 <button class="chip-option" onclick="toggleMultiChip(this,'vaccine')">Newcastle</button>
 <button class="chip-option" onclick="toggleMultiChip(this,'vaccine')">Gumboro</button>
-<button class="chip-option" onclick="toggleMultiChip(this,'vaccine')">Bronchite (IB)</button>
+<button class="chip-option" onclick="toggleMultiChip(this,'vaccine')">Bronchite</button>
 <button class="chip-option" onclick="toggleMultiChip(this,'vaccine')">Marek</button>
-<button class="chip-option" onclick="toggleMultiChip(this,'vaccine')">Variole</button>
-<button class="chip-option" onclick="toggleMultiChip(this,'vaccine')">Coryza</button>
-<button class="chip-option" onclick="toggleMultiChip(this,'vaccine')">Choléra</button>
-<button class="chip-option" onclick="toggleMultiChip(this,'vaccine')">❌ Aucun vaccin</button>
-<button class="chip-option" onclick="toggleMultiChip(this,'vaccine')">❓ Je ne sais pas</button>
+<button class="chip-option" onclick="toggleMultiChip(this,'vaccine')">❌ Aucun</button>
 </div>
-<label>Maladies récentes dans l'élevage ou la zone ?</label>
-<div class="chip-select" id="recentChips">
-<button class="chip-option" onclick="selectChip(this,'recent')">✅ Non, rien de signalé</button>
-<button class="chip-option" onclick="selectChip(this,'recent')">⚠️ Oui, dans mon élevage</button>
-<button class="chip-option" onclick="selectChip(this,'recent')">⚠️ Oui, dans la zone / chez les voisins</button>
-</div>
-<label>Traitements déjà tentés</label>
-<div class="chip-select" id="triedChips" style="margin-bottom:8px;">
-<button class="chip-option" onclick="toggleMultiChip(this,'tried')">Antibiotique</button>
-<button class="chip-option" onclick="toggleMultiChip(this,'tried')">Anticoccidien</button>
-<button class="chip-option" onclick="toggleMultiChip(this,'tried')">Vermifuge</button>
-<button class="chip-option" onclick="toggleMultiChip(this,'tried')">Vitamines</button>
-<button class="chip-option" onclick="toggleMultiChip(this,'tried')">Remède traditionnel</button>
-<button class="chip-option" onclick="toggleMultiChip(this,'tried')">❌ Aucun traitement</button>
 </div>
 </div>
 </div>
 
-<div style="text-align:right;margin-top:16px;">
-<button class="btn btn-primary" onclick="goToStep(1)" id="btn-next-1" disabled>Continuer vers les symptômes →</button>
-</div>
 </div>
 
 <!-- STEP 2: DIAGNOSTIC (Photos + Symptômes fusionnés) -->
@@ -2673,6 +2560,7 @@ function checkLocation() {
 const c=document.getElementById('country').value, r=document.getElementById('region').value, a=document.getElementById('poultryAge').value;
 document.getElementById('btn-next-1').disabled = !(c && r && a);
 }
+function checkQuickForm() { checkLocation(); }
 
 // ── FORM SECTIONS MANAGEMENT ──
 const chipSelections = {};
@@ -2702,44 +2590,7 @@ updateFormProgress();
 }
 
 function updateFormProgress() {
-const fields = [
-!!document.getElementById('country').value,
-!!document.getElementById('region').value,
-!!document.getElementById('poultryAge').value,
-!!document.getElementById('poultryBreed')?.value,
-!!document.getElementById('sickCount')?.value,
-!!document.getElementById('flockSize')?.value,
-!!chipSelections['season'],
-!!chipSelections['spread'],
-!!chipSelections['onset'],
-!!chipSelections['death'],
-!!chipSelections['building'],
-!!chipSelections['feed'],
-!!chipSelections['water'],
-!!(chipSelections['vaccine'] && chipSelections['vaccine'].length),
-!!chipSelections['origin'],
-];
-const filled = fields.filter(Boolean).length;
-const pct = Math.round((filled / fields.length) * 100);
-
-document.getElementById('formProgressFill').style.width = pct + '%';
-document.getElementById('formProgressText').textContent = pct + '%';
-
-// Mark sections as filled
-const sec1 = document.getElementById('country').value && document.getElementById('region').value;
-const sec2 = document.getElementById('poultryAge').value;
-const sec3 = chipSelections['onset'] || chipSelections['death'];
-const sec4 = chipSelections['building'] || chipSelections['feed'] || chipSelections['water'];
-const sec5 = (chipSelections['vaccine'] && chipSelections['vaccine'].length) || chipSelections['recent'];
-
-document.getElementById('fs-location').classList.toggle('filled', !!sec1);
-document.getElementById('fs-flock').classList.toggle('filled', !!sec2);
-document.getElementById('fs-symptoms-time').classList.toggle('filled', !!sec3);
-document.getElementById('fs-environment').classList.toggle('filled', !!sec4);
-document.getElementById('fs-history').classList.toggle('filled', !!sec5);
-
-// Enable continue button (minimum: country + region + age)
-checkLocation();
+checkQuickForm();
 }
 
 function getFormContext() {
