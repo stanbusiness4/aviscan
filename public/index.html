@@ -2071,7 +2071,7 @@ actionPlan:['Appliquez de la teinture d\'iode ou du miel pur sur chaque croûte,
 differential:'Pourquoi Variole et pas Choléra ? La variole forme des CROÛTES sèches sur la crête et la face (comme des verrues). Le choléra ne fait pas de croûtes, il cause plutôt une mort subite avec crête bleue. La variole évolue lentement (3-4 semaines), le choléra tue en 24-48h.',
 refImage:''},
 d6: {urgency:'🟡 MODÉRÉ — Traitez rapidement',urgencyColor:'#E8872A',
-actionPlan:['Isolez les poulets qui ont le visage gonflé et qui sentent mauvais du nez','Donnez un antibiotique dans l\'eau : Oxytétracycline ou Enrofloxacine (selon notice vétérinaire)','Améliorez la ventilation — le coryza est aggravé par le froid et les courants d\'air','Si ça revient souvent : vaccinez le prochain lot (vaccin Coryza en injection)'],
+actionPlan:['Isolez les poulets qui ont le visage gonflé et qui sentent mauvais du nez','Donnez un antibiotique dans l\'eau : Oxytétracycline (1g/L) ou Enrofloxacine','Améliorez la ventilation — le coryza est aggravé par le froid et les courants d\'air','Si ça revient souvent : vaccinez le prochain lot (vaccin Coryza en injection)'],
 differential:'Pourquoi Coryza et pas Mycoplasmose (CRD) ? Le coryza provoque un gonflement VISIBLE de la face et une ODEUR nauséabonde. La mycoplasmose cause des râles et des bulles dans les yeux SANS gonflement facial. Les deux peuvent se combiner (très fréquent).',
 refImage:''},
 d7: {urgency:'🔴 GRAVE — Pas de traitement curatif',urgencyColor:'#C0392B',
@@ -2087,7 +2087,7 @@ actionPlan:['Isolez les malades et jetez ou brûlez les cadavres (ne les donnez 
 differential:'Pourquoi Salmonellose et pas Coccidiose ? La salmonellose donne des fientes JAUNE-VERDÂTRES ou blanches. La coccidiose donne des fientes SANGLANTES. La salmonellose touche surtout les poussins 0-3 semaines avec une forte mortalité brutale. Les adultes infectés ne montrent souvent aucun signe.',
 refImage:''},
 d10: {urgency:'🔴 URGENT — Agissez dans les 6 heures',urgencyColor:'#C0392B',
-actionPlan:['Si vous trouvez des poulets morts avec la crête BLEUE : c\'est probablement le choléra — traitez TOUT LE LOT','Donnez immédiatement Oxytétracycline ou Sulfadimidine (selon notice vétérinaire) à TOUS les poulets','Éliminez les rongeurs (rats, souris) — ce sont les principaux porteurs','Vaccinez les survivants après guérison'],
+actionPlan:['Si vous trouvez des poulets morts avec la crête BLEUE : c\'est probablement le choléra — traitez TOUT LE LOT','Donnez immédiatement Oxytétracycline (1g/L eau) ou Sulfadimidine (3g/L) à TOUS les poulets','Éliminez les rongeurs (rats, souris) — ce sont les principaux porteurs','Vaccinez les survivants après guérison'],
 differential:'Pourquoi Choléra et pas Newcastle ? Le choléra cause une mort SUBITE avec crête BLEUE (cyanose). Newcastle cause une mort plus lente avec des signes nerveux (torticolis) et respiratoires. Le choléra est une maladie BACTÉRIENNE (traitable aux antibiotiques), Newcastle est VIRAL (pas d\'antibiotique efficace).',
 refImage:''},
 d11: {urgency:'🟡 MODÉRÉ — Traitez dans les 48h',urgencyColor:'#E8872A',actionPlan:['Donnez Tylosine ou Doxycycline dans l\'eau pendant 5-7 jours','Améliorez la ventilation et réduisez la poussière dans le poulailler','Évitez le stress : pas de manipulation, pas de changement d\'aliment','Les symptômes peuvent revenir en cas de stress — c\'est une maladie chronique'],differential:'La mycoplasmose donne des râles et des bulles dans les yeux SANS gonflement facial (contrairement au coryza). Elle est chronique et réapparaît lors de stress.',refImage:''},
@@ -2889,7 +2889,7 @@ const age = document.getElementById('poultryAge').value;
 if(isAuthenticated) {
 return `<div class="disease-section"><h4>🌿 Traitements — ${region}</h4>
 <div style="background:#FEF3E2;border:2px solid #E8872A;border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:#85500B;line-height:1.6;">
-<strong>⚠️ AVERTISSEMENT LÉGAL IMPORTANT :</strong> Les médicaments vétérinaires listés sont fournis à titre informatif UNIQUEMENT. <strong>Ils doivent être délivrés sur prescription d'un vétérinaire habilité</strong> dans la plupart des pays. AviaScan ne fournit AUCUNE posologie chiffrée : <strong>respectez TOUJOURS la notice du produit</strong> et demandez conseil à un vétérinaire ou pharmacien vétérinaire. <strong>Délai d'attente obligatoire :</strong> ne consommez ni viande ni œufs pendant la période indiquée sur l'emballage après tout traitement antibiotique. L'usage abusif d'antibiotiques crée des résistances dangereuses pour la santé animale ET humaine. AviaScan ne remplace en aucun cas l'avis d'un professionnel et décline toute responsabilité en cas de mauvais usage.
+<strong>⚠️ AVERTISSEMENT IMPORTANT :</strong> Les médicaments listés sont à titre indicatif. <strong>Respectez TOUJOURS la posologie inscrite sur l'emballage du produit</strong> ou demandez conseil à un vétérinaire / pharmacien vétérinaire. Adaptez le dosage au poids, à l'âge et au nombre de vos volailles. AviaScan ne remplace en aucun cas l'avis d'un professionnel.
 </div>
 <div class="treatment-tabs">
 <button class="treat-tab active-bio" onclick="switchTab(this,'bio','${d.id}')">🌿 Bio / Naturels</button>
