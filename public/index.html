@@ -2835,15 +2835,12 @@ h+=`<div style="background:${extra.urgencyColor}15;border:1px solid ${extra.urge
 }
 
 // Confidence level
-h+=`<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:${confColor}12;border-radius:8px;margin-bottom:12px;font-size:12px;"><span>${confIcon}</span><span style="color:${confColor};font-weight:700;">Confiance ${confLevel}</span><span style="color:var(--text-light);">— ${d.matchedCount} symptôme${d.matchedCount>1?'s':''} sur ${d.symptoms.length} correspondent à cette maladie</span></div>`;
+h+=`<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:${confColor}12;border-radius:8px;margin-bottom:12px;font-size:12px;"><span>${confIcon}</span><span style="color:${confColor};font-weight:700;">Confiance ${confLevel}</span><span style="color:var(--text-light);">— ${d.matchedCount} symptôme${d.matchedCount>1?'s':''} sur ${d.symptoms.length}</span></div>`;
 
-// Symptoms
-h+=`<div class="disease-section"><h4>🔍 Symptômes (${d.matchedCount}/${d.symptoms.length})</h4><div class="matched-symptoms">${d.matched.map(sid=>{const s=SYMPTOMS.find(x=>x.id===sid);return`<span class="matched-tag yes">${s.icon} ${s.name}</span>`;}).join('')}${d.unmatched.slice(0,4).map(sid=>{const s=SYMPTOMS.find(x=>x.id===sid);return s?`<span class="matched-tag no">${s.name}</span>`:''}).join('')}</div></div>`;
-
-// Description (simplified language)
+// 1. Description FIRST (what is this disease?)
 h+=`<div class="disease-section"><h4>📋 C'est quoi cette maladie ?</h4><p class="disease-desc">${d.description}</p><div class="age-note">🐔 <strong>${AGE_LABELS[age]} :</strong> ${d.ageNotes}</div></div>`;
 
-// Action Plan (top 3 steps)
+// 2. Action Plan (THEN what to do)
 if(extra.actionPlan && extra.actionPlan.length) {
 h+=`<div style="background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #81C784;">
 <h4 style="font-size:14px;font-weight:700;color:#1B5E20;margin-bottom:10px;">🚨 Que faire MAINTENANT ?</h4>
@@ -2856,17 +2853,24 @@ h+=`<div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;colo
 h+=`</div></div>`;
 }
 
-// Differential diagnosis
+// 3. Treatments (bio + pharma)
+h+=renderTreatmentSection(d, region, farmType);
+
+// 4. Symptoms (matched only, cleaner)
+h+=`<div class="disease-section"><h4>🔍 Symptômes correspondants (${d.matchedCount}/${d.symptoms.length})</h4><div class="matched-symptoms">${d.matched.map(sid=>{const s=SYMPTOMS.find(x=>x.id===sid);return`<span class="matched-tag yes">${s.icon} ${s.name}</span>`;}).join('')}</div></div>`;
+
+// 5. Prevention
+h+=`<div class="prevention-box"><h4>🛡️ Prévention</h4><ul>${d.prevention.map(p=>`<li>${p}</li>`).join('')}</ul></div>`;
+
+// 6. Differential diagnosis (at the end, collapsible)
 if(extra.differential) {
-h+=`<div style="background:#F3E5F5;border-radius:12px;padding:14px 16px;margin-bottom:12px;border:1px solid #CE93D8;cursor:pointer;" onclick="this.querySelector('.diff-body').style.display=this.querySelector('.diff-body').style.display==='none'?'block':'none'">
+h+=`<div style="background:#F3E5F5;border-radius:12px;padding:14px 16px;margin-top:12px;border:1px solid #CE93D8;cursor:pointer;" onclick="this.querySelector('.diff-body').style.display=this.querySelector('.diff-body').style.display==='none'?'block':'none'">
 <h4 style="font-size:13px;font-weight:700;color:#6A1B9A;margin-bottom:0;">🔬 Pourquoi cette maladie et pas une autre ? <span style="font-size:11px;font-weight:400;opacity:0.7;">▼ Cliquez pour voir</span></h4>
 <div class="diff-body" style="display:none;margin-top:10px;font-size:12px;color:#4A148C;line-height:1.7;">${extra.differential}</div>
 </div>`;
 }
 
-// Treatments
-h+=renderTreatmentSection(d, region, farmType);
-h+=`<div class="prevention-box"><h4>🛡️ Prévention</h4><ul>${d.prevention.map(p=>`<li>${p}</li>`).join('')}</ul></div></div></div>`;
+h+=`</div></div>`;
 });
 h+=`<div style="background:var(--bg);border-radius:12px;padding:14px 18px;margin-top:16px;border:1px solid var(--border);font-size:12px;color:var(--text-light);line-height:1.6;text-align:center;">
 <strong>⚠️ Avertissement :</strong> AviaScan est un outil d'aide à la décision et ne remplace pas l'avis d'un vétérinaire qualifié. Les diagnostics proposés sont des probabilités basées sur les symptômes renseignés. Consultez toujours un professionnel avant d'administrer un traitement.
