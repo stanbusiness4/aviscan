@@ -199,6 +199,17 @@ position: sticky; bottom: 16px; background: var(--card); border-radius: 16px; pa
 box-shadow: var(--shadow-lg); border: 2px solid var(--primary-pale); display: flex; align-items: center;
 justify-content: space-between; gap: 12px; margin-top: 20px; z-index: 100; flex-wrap: wrap;
 }
+.selected-bar-floating {
+position: fixed; bottom: 80px; left: 16px; right: 16px; background: var(--card);
+border-radius: 16px; padding: 14px 18px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+border: 2px solid var(--primary); display: flex; align-items: center;
+justify-content: space-between; gap: 12px; z-index: 150; flex-wrap: wrap;
+max-width: calc(100% - 32px); backdrop-filter: blur(10px);
+animation: slideUpIn 0.3s ease;
+}
+@keyframes slideUpIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@media (min-width: 768px) { .selected-bar-floating { max-width: 800px; left: 50%; transform: translateX(-50%); } }
+.selected-bar-floating .selected-tags { max-height: 60px; overflow-y: auto; }
 .selected-count { font-weight: 700; color: var(--primary); font-size: 15px; }
 .selected-tags { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
 
@@ -1110,16 +1121,51 @@ Déjà abonné ? <a onclick="closePaymentModal();openAuthModal()">Se connecter a
 <!-- STEP 2: DIAGNOSTIC (Photos + Symptômes fusionnés) -->
 <div class="section" id="section-1">
 <h2 class="section-title">🔍 Diagnostic de vos poulets</h2>
-<p class="section-sub">Sélectionnez les symptômes observés pour obtenir un diagnostic précis.</p>
+<p class="section-sub">Sélectionnez les symptômes observés. <strong>Minimum 3 symptômes recommandés</strong> pour un diagnostic précis.</p>
+
+<!-- SYMPTOM SEARCH BAR -->
+<div style="margin-bottom:14px;position:relative;">
+<input type="text" id="symptomSearch" placeholder="🔍 Rechercher un symptôme (ex: diarrhée, toux, boiterie...)" oninput="searchSymptoms()" style="width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:12px;font-size:14px;background:var(--card);color:var(--text);transition:border-color 0.2s;">
+</div>
+
+<!-- PROGRESS INDICATOR -->
+<div id="symptomProgress" style="background:var(--card);border-radius:10px;padding:10px 14px;margin-bottom:14px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:13px;">
+<span id="symptomProgressIcon" style="font-size:18px;">⚪</span>
+<div style="flex:1;">
+<div style="font-weight:600;color:var(--text);" id="symptomProgressText">Sélectionnez au moins 3 symptômes</div>
+<div style="height:4px;background:var(--bg);border-radius:2px;margin-top:4px;overflow:hidden;">
+<div id="symptomProgressBar" style="height:100%;width:0%;background:var(--primary);transition:width 0.3s;border-radius:2px;"></div>
+</div>
+</div>
+</div>
+
+<!-- URGENCY SHORTCUT -->
+<div onclick="selectUrgencySymptoms()" style="background:linear-gradient(135deg,#FFEBEE,#FFCDD2);border:2px solid #EF5350;border-radius:12px;padding:12px 16px;margin-bottom:14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:transform 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'" onmouseout="this.style.transform='scale(1)'">
+<span style="font-size:24px;">🚨</span>
+<div style="flex:1;">
+<strong style="color:#B71C1C;font-size:14px;">Urgence : mes poulets meurent !</strong>
+<p style="font-size:12px;color:#C62828;margin-top:2px;">Pré-sélectionner les symptômes critiques (mortalité, torticolis, cyanose...)</p>
+</div>
+<span style="color:#B71C1C;font-size:18px;">→</span>
+</div>
 
 <!-- SECTION SYMPTÔMES -->
 <h3 style="font-size:15px;font-weight:700;color:var(--primary);margin-bottom:12px;display:flex;align-items:center;gap:8px;">🩺 Sélectionnez les symptômes <span style="font-size:10px;font-weight:800;background:var(--primary-pale);color:var(--primary);padding:2px 8px;border-radius:4px;">GRATUIT</span></h3>
 <div class="symptom-categories" id="catBtns"></div>
 <div class="symptom-grid" id="symptomGrid"></div>
-<div class="selected-bar" id="selectedBar" style="display:none;">
+<div id="noResultsMessage" style="display:none;text-align:center;padding:30px 20px;color:var(--text-light);font-size:14px;">
+<div style="font-size:40px;margin-bottom:10px;">🔍</div>
+Aucun symptôme trouvé pour cette recherche.<br>
+<span style="font-size:12px;">Essayez avec un autre mot ou parcourez les catégories.</span>
+</div>
+
+<!-- FLOATING ACTION BUTTON (diagnose) -->
+<div id="selectedBar" class="selected-bar-floating" style="display:none;">
+<div style="flex:1;">
 <div><span class="selected-count" id="selectedCount">0</span></div>
 <div class="selected-tags" id="selectedTags"></div>
-<button class="btn btn-primary" onclick="runDiagnosis()" id="btn-diagnose" disabled>🩺 Diagnostiquer</button>
+</div>
+<button class="btn btn-primary" onclick="runDiagnosis()" id="btn-diagnose" disabled style="white-space:nowrap;">🩺 Diagnostiquer →</button>
 </div>
 </div>
 
@@ -2622,9 +2668,77 @@ for(const [cat,emoji] of Object.entries(SYMPTOM_CATEGORIES)) h+=`<button class="
 c.innerHTML=h;
 }
 function filterCat(cat,btn) { currentCat=cat; document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderSymptoms(); }
-function renderSymptoms() {
-const g=document.getElementById('symptomGrid'), f = currentCat==='all' ? SYMPTOMS : SYMPTOMS.filter(s=>s.cat===currentCat);
+
+// Search symptoms across all categories
+function searchSymptoms() {
+const query = (document.getElementById('symptomSearch')?.value || '').toLowerCase().trim();
+renderSymptoms(query);
+}
+
+// Pre-select urgent/critical symptoms
+function selectUrgencySymptoms() {
+// Critical symptoms: mortality, torticollis, cyanosis, bloody diarrhea, paralysis, gasping
+const urgentIds = ['s87', 's14', 's23', 's24', 's73', 's5', 's85', 's12'];
+urgentIds.forEach(id => {
+if(SYMPTOMS.find(s => s.id === id)) selectedSymptoms.add(id);
+});
+renderSymptoms();
+updateSelectedBar();
+showToast('🚨 Symptômes d\'urgence pré-sélectionnés');
+// Scroll to selected bar
+setTimeout(() => document.getElementById('selectedBar')?.scrollIntoView({behavior:'smooth', block:'center'}), 300);
+}
+
+// Update progress indicator based on number of selected symptoms
+function updateSymptomProgress() {
+const count = selectedSymptoms.size;
+const icon = document.getElementById('symptomProgressIcon');
+const text = document.getElementById('symptomProgressText');
+const bar = document.getElementById('symptomProgressBar');
+if(!icon || !text || !bar) return;
+
+if(count === 0) {
+icon.textContent = '⚪';
+text.textContent = 'Sélectionnez au moins 3 symptômes';
+bar.style.width = '0%';
+bar.style.background = 'var(--border)';
+} else if(count < 3) {
+icon.textContent = '🟡';
+text.textContent = `${count} symptôme${count>1?'s':''} sélectionné${count>1?'s':''} — ${3-count} de plus recommandé${3-count>1?'s':''}`;
+bar.style.width = (count/3*100) + '%';
+bar.style.background = '#E8872A';
+} else if(count < 5) {
+icon.textContent = '🟢';
+text.textContent = `${count} symptômes sélectionnés — Bon diagnostic possible`;
+bar.style.width = '75%';
+bar.style.background = '#27713B';
+} else {
+icon.textContent = '✨';
+text.textContent = `${count} symptômes sélectionnés — Diagnostic précis`;
+bar.style.width = '100%';
+bar.style.background = '#1B5E20';
+}
+}
+function renderSymptoms(searchQuery) {
+const g=document.getElementById('symptomGrid');
+const noRes = document.getElementById('noResultsMessage');
+const query = (searchQuery !== undefined ? searchQuery : (document.getElementById('symptomSearch')?.value || '')).toLowerCase().trim();
+
+let f;
+if(query) {
+// Search mode: ignore category, filter all by name
+f = SYMPTOMS.filter(s => s.name.toLowerCase().includes(query));
+} else {
+f = currentCat==='all' ? SYMPTOMS : SYMPTOMS.filter(s=>s.cat===currentCat);
+}
+
+if(f.length === 0 && query) {
+g.innerHTML = '';
+if(noRes) noRes.style.display = 'block';
+} else {
+if(noRes) noRes.style.display = 'none';
 g.innerHTML = f.map(s=>`<div class="symptom-chip ${selectedSymptoms.has(s.id)?'selected':''}" onclick="toggleSymptom('${s.id}')"><span class="icon">${s.icon}</span><span>${s.name}</span><span class="chip-check">✓</span></div>`).join('');
+}
 }
 function toggleSymptom(id) { selectedSymptoms.has(id)?selectedSymptoms.delete(id):selectedSymptoms.add(id); renderSymptoms(); updateSelectedBar(); }
 function removeSymptom(id) { selectedSymptoms.delete(id); renderSymptoms(); updateSelectedBar(); }
@@ -2634,6 +2748,7 @@ bar.style.display = n>0?'flex':'none';
 document.getElementById('selectedCount').textContent=`${n} symptôme(s)`;
 document.getElementById('btn-diagnose').disabled = n<2;
 document.getElementById('selectedTags').innerHTML = [...selectedSymptoms].map(id => { const s=SYMPTOMS.find(x=>x.id===id); return `<span class="mini-tag">${s.icon} ${s.name} <span class="remove" onclick="event.stopPropagation();removeSymptom('${id}')">×</span></span>`; }).join('');
+updateSymptomProgress();
 }
 
 // ── DIAGNOSIS ──
