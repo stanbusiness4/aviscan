@@ -906,20 +906,20 @@ font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s;
 <div class="sub-tiers" id="subTiers">
 <div class="sub-tier active" onclick="selectSubTier('mensuel', this)">
 <div class="st-duration">Mensuel</div>
-<div class="st-price" id="priceMensuel">3 500</div>
+<div class="st-price" id="priceMensuel">2 500</div>
 <div class="st-unit">FCFA / mois</div>
 </div>
 <div class="sub-tier" onclick="selectSubTier('trimestriel', this)">
 <div class="st-badge">Populaire</div>
 <div class="st-duration">Trimestriel</div>
-<div class="st-price" id="priceTrimestriel">9 000</div>
+<div class="st-price" id="priceTrimestriel">6 500</div>
 <div class="st-unit">FCFA / 3 mois</div>
 <div class="st-save" id="saveTrim">-14% d'&#233;conomie</div>
 </div>
 <div class="sub-tier" onclick="selectSubTier('annuel', this)">
 <div class="st-badge">Meilleur prix</div>
 <div class="st-duration">Annuel</div>
-<div class="st-price" id="priceAnnuel">30 000</div>
+<div class="st-price" id="priceAnnuel">22 000</div>
 <div class="st-unit">FCFA / an</div>
 <div class="st-save" id="saveAnnuel">-29% d'&#233;conomie</div>
 </div>
@@ -2369,7 +2369,7 @@ let appAnnonceCouleur = '';
 let appAvis = [];
 let appFormations = { freeVideos: [], premiumVideos: [], freePdfs: [], premiumPdfs: [] };
 let appSnaps = { mensuel: '', trimestriel: '', annuel: '' };
-let appPrices = { mensuel: '3500', trimestriel: '9000', annuel: '30000' };
+let appPrices = { mensuel: '2500', trimestriel: '6500', annuel: '22000' };
 let currentSubTier = 'mensuel';
 let emailExpirations = {};
 
@@ -4128,9 +4128,9 @@ if(pt && appPrices.trimestriel) pt.textContent = parseInt(appPrices.trimestriel)
 if(pa && appPrices.annuel) pa.textContent = parseInt(appPrices.annuel).toLocaleString('fr-FR');
 
 // Calculate savings
-const m = parseInt(appPrices.mensuel) || 3500;
-const t = parseInt(appPrices.trimestriel) || 9000;
-const a = parseInt(appPrices.annuel) || 30000;
+const m = parseInt(appPrices.mensuel) || 2500;
+const t = parseInt(appPrices.trimestriel) || 6500;
+const a = parseInt(appPrices.annuel) || 22000;
 
 const saveTrim = document.getElementById('saveTrim');
 const mensuel3 = m * 3;
