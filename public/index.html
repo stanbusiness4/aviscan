@@ -1236,6 +1236,18 @@ Aucun symptôme trouvé pour cette recherche.<br>
 </div>
 </div>
 
+<!-- NOTIFICATION ACTIVATION BANNER -->
+<div id="notifBanner" style="display:none;background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border:2px solid #81C784;border-radius:var(--radius);padding:14px 18px;margin-bottom:16px;">
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+<div style="font-size:28px;">🔔</div>
+<div style="flex:1;min-width:200px;">
+<div style="font-weight:700;color:#1B5E20;font-size:14px;margin-bottom:2px;">Activez les notifications</div>
+<div style="font-size:12px;color:#2E7D32;line-height:1.4;">Recevez un rappel automatique le jour de chaque vaccination (à 7h du matin)</div>
+</div>
+<button onclick="requestNotificationPermission()" class="btn btn-primary" style="background:#1B5E20;border-color:#1B5E20;padding:10px 18px;font-size:13px;">Activer</button>
+</div>
+</div>
+
 <div class="location-card" style="margin-bottom:20px;">
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
 <div>
@@ -2222,6 +2234,12 @@ showToast(newTheme === 'dark' ? '🌙 Mode sombre activé' : '☀️ Mode clair 
 function init() {
 // Initialize theme from localStorage or system preference
 initTheme();
+
+// Show notification banner if permission is default
+if('Notification' in window && Notification.permission === 'default') {
+const nb = document.getElementById('notifBanner');
+if(nb) nb.style.display = 'block';
+}
 
 // Splash screen
 setTimeout(() => {
@@ -3996,20 +4014,65 @@ else phase = 'Production';
 document.getElementById('dayCounterPhase').textContent = phase;
 } else if(dayCard) { dayCard.style.display = 'none'; }
 
-// Summary
+// Summary with TOTAL BUDGET calculation
 if(startDate) {
 const oblCount = program.filter(v=>v.type==='obligatoire' && v.dayOffset < 900).length;
 const recCount = program.filter(v=>v.type==='recommande').length;
 const typeLabels = {chair:'Poulet de chair',ponte:'Pondeuse',local:'Race locale',reproducteur:'Reproducteur'};
+
+// Calculate total budget from cost strings
+let budgetMin = 0, budgetMax = 0;
+program.forEach(v => {
+if(v.cost && v.dayOffset < 900) {
+const nums = v.cost.match(/(\d[\d\s]*)/g);
+if(nums && nums.length >= 2) {
+budgetMin += parseInt(nums[0].replace(/\s/g, '')) || 0;
+budgetMax += parseInt(nums[1].replace(/\s/g, '')) || 0;
+} else if(nums && nums.length === 1) {
+const val = parseInt(nums[0].replace(/\s/g, '')) || 0;
+budgetMin += val; budgetMax += val;
+}
+}
+});
+
+// Count done vaccines from localStorage
+const doneKey = 'aviascan_vax_done_' + type;
+let doneList = [];
+try { doneList = JSON.parse(localStorage.getItem(doneKey) || '[]'); } catch(e) {}
+const doneCount = doneList.length;
+const totalCount = program.filter(v=>v.dayOffset < 900 && v.type !== 'optionnel').length;
+const progressPct = totalCount > 0 ? Math.round(doneCount/totalCount*100) : 0;
+
 summary.style.display = 'flex';
-summary.innerHTML = `<span>📋 <strong>${typeLabels[type]}</strong></span><span>🔴 <strong>${oblCount}</strong> obligatoires</span><span>🟡 <strong>${recCount}</strong> recommandés</span>${flockSize?`<span>🐔 <strong>${flockSize}</strong> sujets</span>`:''}${startDate?`<span>📅 Démarrage : <strong>${startDate.toLocaleDateString('fr-FR')}</strong></span>`:''}`;
+summary.innerHTML = `
+<span>📋 <strong>${typeLabels[type]}</strong></span>
+<span>🔴 <strong>${oblCount}</strong> obligatoires</span>
+<span>🟡 <strong>${recCount}</strong> recommandés</span>
+${flockSize?`<span>🐔 <strong>${flockSize}</strong> sujets</span>`:''}
+<span>📅 <strong>${startDate.toLocaleDateString('fr-FR')}</strong></span>
+<span style="background:linear-gradient(135deg,#27713B,#4ADE80);color:#fff;padding:4px 12px;border-radius:8px;font-weight:700;">✅ ${doneCount}/${totalCount} (${progressPct}%)</span>
+${budgetMin>0?`<span style="background:linear-gradient(135deg,#E8872A,#F5B041);color:#fff;padding:4px 12px;border-radius:8px;font-weight:700;">💰 Budget : ${budgetMin.toLocaleString('fr-FR')}-${budgetMax.toLocaleString('fr-FR')} FCFA</span>`:''}
+${flockSize>0&&budgetMin>0?`<span style="font-size:11px;color:var(--text-light);">≈ ${Math.round(budgetMin/flockSize)}-${Math.round(budgetMax/flockSize)} FCFA/poussin</span>`:''}
+`;
+
+// Auto-schedule notifications on first render with date
+scheduleAllVaxNotifications(program, startDate, type);
 } else {
 summary.style.display = 'none';
 }
 
+// Load done list for this type
+const doneKey = 'aviascan_vax_done_' + type;
+let doneList = [];
+try { doneList = JSON.parse(localStorage.getItem(doneKey) || '[]'); } catch(e) {}
+
 container.innerHTML = program.map((v, i) => {
 const tagClass = v.type === 'obligatoire' ? 'obligatoire' : v.type === 'recommande' ? 'recommande' : 'optionnel';
 const tagLabel = v.type === 'obligatoire' ? '🔴 Obligatoire' : v.type === 'recommande' ? '🟡 Recommandé' : '⚪ Info';
+
+// Unique ID for this vaccine step
+const vaxId = type + '_' + i;
+const isDone = doneList.includes(vaxId);
 
 // Compute date if startDate is set
 let dateStr = '';
@@ -4029,25 +4092,156 @@ else if(diffDays <= 3) statusClass = 'upcoming';
 else statusClass = 'future';
 }
 
+// If manually marked as done, override status
+if(isDone) statusClass = 'done';
+
 // Day label
 const dayLabel = v.dayOffset >= 999 ? '🔁 Récurrent' : v.dayOffset === 0 ? 'Jour 1' : `Jour ${v.dayOffset + 1}`;
 
-return `<div class="vax-item ${statusClass}" style="animation-delay:${i*0.04}s">
+// Calculate quantity needed for this flock
+let quantityInfo = '';
+if(flockSize > 0 && v.qty && v.dayOffset < 900 && v.type !== 'optionnel') {
+// Detect unit from qty (doses, ml, etc.)
+if(v.qty.includes('dose')) {
+const flaconSize = 1000; // Standard flacon size
+const flacons = Math.ceil(flockSize / flaconSize);
+quantityInfo = `<br>🧮 <strong>Pour ${flockSize} sujets :</strong> ${flacons} flacon${flacons>1?'s':''} de ${flaconSize} doses (${flockSize} doses nécessaires)`;
+} else if(v.qty.includes('0.5ml')) {
+const mlTotal = flockSize * 0.5;
+quantityInfo = `<br>🧮 <strong>Pour ${flockSize} sujets :</strong> ${mlTotal}ml soit ${Math.ceil(mlTotal/500)} flacon${mlTotal>500?'s':''} de 500ml`;
+} else if(v.qty.includes('1ml/L') || v.qty.includes('1ml / litre')) {
+// Estimate water consumption: ~25ml/day/chick
+const waterL = Math.ceil(flockSize * 0.025);
+quantityInfo = `<br>🧮 <strong>Pour ${flockSize} sujets :</strong> ~${waterL}L d'eau traitée/jour`;
+}
+}
+
+return `<div class="vax-item ${statusClass}" style="animation-delay:${i*0.04}s;${isDone?'opacity:0.65;':''}">
 <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:4px;">
 <div class="vax-day">${dayLabel}</div>
 ${dateStr ? `<div style="font-size:12px;font-weight:700;color:${statusClass==='done'?'var(--success)':statusClass==='upcoming'?'var(--accent)':'var(--text-light)'};">${statusClass==='done'?'✅ ':''}${statusClass==='upcoming'?'⏰ ':''}${dateStr}</div>` : ''}
 </div>
-<div class="vax-name">${v.name}</div>
+<div class="vax-name" style="${isDone?'text-decoration:line-through;color:var(--text-light);':''}">${v.name}</div>
 <div class="vax-details">
 💉 <strong>Voie :</strong> ${v.route}<br>
 ${v.details}
 ${v.qty ? `<br>📏 <strong>Dose :</strong> ${v.qty}` : ''}
+${quantityInfo}
 ${v.cost ? `<br>💰 <strong>Coût :</strong> ${v.cost}` : ''}
 </div>
-${(statusClass==='upcoming' && dateStr) ? `<div style="margin-top:8px;"><button onclick="setVaxReminder('${v.name}','${dateStr}')" class="btn btn-outline" style="font-size:11px;padding:6px 14px;">🔔 Ajouter un rappel</button></div>` : ''}
+${v.dayOffset < 900 && v.type !== 'optionnel' ? `
+<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+<button onclick="toggleVaxDone('${vaxId}','${type}')" class="btn ${isDone?'btn-primary':'btn-outline'}" style="font-size:12px;padding:7px 14px;flex:1;min-width:130px;">
+${isDone ? '✅ Fait le '+new Date(doneList.find(d=>d===vaxId) ? getVaxDoneDate(vaxId) : today).toLocaleDateString('fr-FR') : '☐ Marquer comme fait'}
+</button>
+${(statusClass==='upcoming' && dateStr) ? `<button onclick="setVaxReminder('${v.name.replace(/'/g,'\\\'')}','${dateStr}')" class="btn btn-outline" style="font-size:12px;padding:7px 14px;">🔔 Rappel WhatsApp</button>` : ''}
+</div>
+` : ''}
 <span class="vax-tag ${tagClass}">${tagLabel}</span>
 </div>`;
 }).join('');
+}
+
+// ── VACCINATION STATE MANAGEMENT ──
+function toggleVaxDone(vaxId, type) {
+const doneKey = 'aviascan_vax_done_' + type;
+const dateKey = 'aviascan_vax_dates_' + type;
+let doneList = [];
+let doneDates = {};
+try {
+doneList = JSON.parse(localStorage.getItem(doneKey) || '[]');
+doneDates = JSON.parse(localStorage.getItem(dateKey) || '{}');
+} catch(e) {}
+
+if(doneList.includes(vaxId)) {
+doneList = doneList.filter(d => d !== vaxId);
+delete doneDates[vaxId];
+showToast('☐ Vaccination retirée');
+} else {
+doneList.push(vaxId);
+doneDates[vaxId] = new Date().toISOString();
+showToast('✅ Vaccination enregistrée !');
+}
+
+try {
+localStorage.setItem(doneKey, JSON.stringify(doneList));
+localStorage.setItem(dateKey, JSON.stringify(doneDates));
+} catch(e) {}
+
+renderVaxCalendar();
+}
+
+function getVaxDoneDate(vaxId) {
+for(const type of ['chair','ponte','local','reproducteur']) {
+try {
+const dates = JSON.parse(localStorage.getItem('aviascan_vax_dates_' + type) || '{}');
+if(dates[vaxId]) return dates[vaxId];
+} catch(e) {}
+}
+return new Date().toISOString();
+}
+
+// ── NOTIFICATION SCHEDULING ──
+let notificationsScheduled = new Set();
+
+function scheduleAllVaxNotifications(program, startDate, type) {
+// Request permission once
+if('Notification' in window && Notification.permission === 'default') {
+// Don't auto-prompt, wait for user interaction (first "Fait" click or similar)
+return;
+}
+if(Notification.permission !== 'granted') return;
+
+// Schedule notifications for upcoming vaccines within 7 days
+const now = new Date();
+const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+program.forEach((v, i) => {
+if(v.dayOffset >= 900) return;
+const key = type + '_' + i + '_' + startDate.getTime();
+if(notificationsScheduled.has(key)) return;
+
+const vaxDate = new Date(startDate);
+vaxDate.setDate(vaxDate.getDate() + v.dayOffset);
+vaxDate.setHours(7, 0, 0, 0); // 7am notification
+
+const msUntil = vaxDate - now;
+// Schedule if between now and 7 days from now
+if(msUntil > 0 && msUntil < 7 * 86400000) {
+setTimeout(() => {
+new Notification('💉 Vaccination prévue aujourd\'hui', {
+body: v.name + ' — Préparez le vaccin et la glacière',
+icon: '/favicon.ico',
+tag: key
+});
+}, msUntil);
+notificationsScheduled.add(key);
+}
+});
+}
+
+function requestNotificationPermission() {
+if(!('Notification' in window)) {
+showToast('❌ Ce navigateur ne supporte pas les notifications');
+return;
+}
+if(Notification.permission === 'granted') {
+showToast('✅ Notifications déjà activées');
+return;
+}
+if(Notification.permission === 'denied') {
+showToast('⚠️ Autorisez les notifications dans les paramètres du navigateur');
+return;
+}
+Notification.requestPermission().then(p => {
+if(p === 'granted') {
+showToast('✅ Notifications activées ! Vous serez alerté pour chaque vaccination.');
+new Notification('🎉 AviaScan', { body: 'Notifications activées ! Vous recevrez un rappel à chaque date de vaccination.' });
+const nb = document.getElementById('notifBanner');
+if(nb) nb.style.display = 'none';
+renderVaxCalendar();
+}
+});
 }
 
 function setVaxReminder(vaccinName, dateStr) {
