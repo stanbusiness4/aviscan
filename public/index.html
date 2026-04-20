@@ -1227,6 +1227,25 @@ Aucun symptôme trouvé pour cette recherche.<br>
 <h2 class="section-title">📅 Calendrier vaccinal</h2>
 <p class="section-sub">Programme de vaccination personnalisé. Entrez la date d'arrivée de vos poussins pour obtenir les dates exactes.</p>
 
+<!-- LEGAL WARNING -->
+<div style="background:linear-gradient(135deg,#FEF3E2,#FFE5CC);border:3px solid #E8872A;border-radius:12px;padding:14px 16px;margin-bottom:16px;box-shadow:0 4px 12px rgba(232,135,42,0.15);">
+<div style="display:flex;align-items:flex-start;gap:10px;">
+<span style="font-size:22px;line-height:1;">⚠️</span>
+<div style="flex:1;">
+<strong style="display:block;font-size:13px;color:#85500B;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px;">Avertissement important</strong>
+<ul style="font-size:11px;color:#85500B;line-height:1.6;padding-left:16px;margin:0;">
+<li>Les protocoles sont <strong>indicatifs</strong>, basés sur les pratiques courantes en Afrique francophone</li>
+<li><strong>Aucun vaccin n'est légalement obligatoire</strong> sauf décision des autorités vétérinaires de votre pays</li>
+<li>Les prix, marques et disponibilités <strong>varient selon votre pays et la saison</strong></li>
+<li>Les marques citées sont des <strong>exemples</strong> — vérifiez leur autorisation dans votre pays</li>
+<li>Prévoyez toujours <strong>+10-15% de marge</strong> sur les quantités de vaccins (perte, reconstitution)</li>
+<li>Consultez un <strong>vétérinaire qualifié</strong> pour un programme adapté à votre élevage</li>
+<li>AviaScan <strong>décline toute responsabilité</strong> en cas de perte économique ou animale</li>
+</ul>
+</div>
+</div>
+</div>
+
 <!-- ASTUCE DU JOUR -->
 <div id="dailyTipCard" style="background:linear-gradient(135deg,#FEF3E2,#FDE8C8);border-radius:var(--radius);padding:14px 18px;margin-bottom:16px;border:1px solid #F5C27A;display:flex;align-items:flex-start;gap:12px;">
 <div style="font-size:24px;min-width:32px;text-align:center;" id="tipIcon">💡</div>
@@ -3877,15 +3896,15 @@ let currentVaxType = 'chair';
 
 const VAX_PROGRAMS = {
 chair: [
-{dayOffset:0,name:'Marek (HVT) — au couvoir',route:'Injection SC au couvoir',type:'obligatoire',details:'Vaccin administré au couvoir (CEVAC MD HVT ou Nobilis Marek). Vérifiez le certificat de vaccination à l\'achat des poussins. Ne peut pas être fait à la ferme.',cost:'Inclus dans le prix du poussin',qty:'1 dose/poussin (0.2ml SC)'},
-{dayOffset:0,name:'Newcastle + IB (HB1 + H120)',route:'Trempage de bec ou goutte oculaire',type:'obligatoire',details:'À la réception : tremper le bec dans le vaccin reconstitué (Pestos, CEVAC Vitabron L, Avinew+H120). Ou 1 goutte oculaire/nasale. Utiliser eau minérale ou eau de puits NON chlorée.',cost:'~2 000-4 000 FCFA / 1000 doses',qty:'1 dose/poussin'},
+{dayOffset:0,name:'Marek (HVT) — au couvoir',route:'Injection SC au couvoir',type:'essentiel',details:'Vaccin administré au couvoir (CEVAC MD HVT ou Nobilis Marek). Vérifiez le certificat de vaccination à l\'achat des poussins. Ne peut pas être fait à la ferme.',cost:'Inclus dans le prix du poussin',qty:'1 dose/poussin (0.2ml SC)'},
+{dayOffset:0,name:'Newcastle + IB (HB1 + H120)',route:'Trempage de bec ou goutte oculaire',type:'essentiel',details:'À la réception : tremper le bec dans le vaccin reconstitué (Pestos, CEVAC Vitabron L, Avinew+H120). Ou 1 goutte oculaire/nasale. Utiliser eau minérale ou eau de puits NON chlorée.',cost:'~2 000-4 000 FCFA / 1000 doses',qty:'1 dose/poussin'},
 {dayOffset:2,name:'Anti-stress vitaminé',route:'Eau de boisson — 3 jours (J2-J4)',type:'recommande',details:'Vitamines AD3EC + électrolytes (Vitaflash, Amin\'Total, Biomulti). Réduit le stress du transport et de la mise en place.',cost:'~2 000-4 000 FCFA / flacon',qty:'1ml / litre d\'eau'},
-{dayOffset:7,name:'Gumboro 1ère dose (intermédiaire)',route:'Eau de boisson',type:'obligatoire',details:'Souche intermédiaire : CEVAC Gumbo L, Hipragumboro CH80, BUR706. Couper l\'eau 2-3h avant. Eau minérale ou eau de puits + lait écrémé en poudre (1 cuillère à soupe/L). Consommation en 2h max. N\'utiliser que des abreuvoirs en plastique.',cost:'~2 000-4 000 FCFA / 1000 doses',qty:'1 dose/poussin'},
-{dayOffset:10,name:'Newcastle + IB rappel (HB1/Clone30 + H120)',route:'Goutte oculaire ou eau de boisson',type:'obligatoire',details:'Rappel Newcastle + Bronchite infectieuse. Souches : Avinew ou HB1 + H120. En zone à risque, ajouter une souche variante IB (CEVAC IBird, Gallivac IB88).',cost:'~2 000-3 000 FCFA / 1000 doses',qty:'1 dose/poussin'},
+{dayOffset:7,name:'Gumboro 1ère dose (intermédiaire)',route:'Eau de boisson',type:'essentiel',details:'Souche intermédiaire : CEVAC Gumbo L, Hipragumboro CH80, BUR706. Couper l\'eau 2-3h avant. Eau minérale ou eau de puits + lait écrémé en poudre (1 cuillère à soupe/L). Consommation en 2h max. N\'utiliser que des abreuvoirs en plastique.',cost:'~2 000-4 000 FCFA / 1000 doses',qty:'1 dose/poussin'},
+{dayOffset:10,name:'Newcastle + IB rappel (HB1/Clone30 + H120)',route:'Goutte oculaire ou eau de boisson',type:'essentiel',details:'Rappel Newcastle + Bronchite infectieuse. Souches : Avinew ou HB1 + H120. En zone à risque, ajouter une souche variante IB (CEVAC IBird, Gallivac IB88).',cost:'~2 000-3 000 FCFA / 1000 doses',qty:'1 dose/poussin'},
 {dayOffset:13,name:'Prévention respiratoire (antibiotique)',route:'Eau de boisson — 3 jours (J13-J15)',type:'recommande',details:'En zone à forte pression infectieuse : Enrofloxacine (Enrosol, Hipralona Enro) ou Tylodox Extra. Prévention des surinfections bactériennes respiratoires après les vaccinations.',cost:'~3 000-6 000 FCFA',qty:'Selon notice du produit'},
-{dayOffset:14,name:'Gumboro 2ème dose (intermédiaire plus)',route:'Eau de boisson',type:'obligatoire',details:'Souche intermédiaire plus pour renforcer l\'immunité : CEVAC IBDL, Nobilis 228E, Hipragumboro GM97, AVI IBD Plus. Même procédure que la 1ère dose.',cost:'~2 500-5 000 FCFA / 1000 doses',qty:'1 dose/poussin'},
+{dayOffset:14,name:'Gumboro 2ème dose (intermédiaire plus)',route:'Eau de boisson',type:'essentiel',details:'Souche intermédiaire plus pour renforcer l\'immunité : CEVAC IBDL, Nobilis 228E, Hipragumboro GM97, AVI IBD Plus. Même procédure que la 1ère dose.',cost:'~2 500-5 000 FCFA / 1000 doses',qty:'1 dose/poussin'},
 {dayOffset:18,name:'Anticoccidien préventif',route:'Eau de boisson — 3 jours (J18-J20)',type:'recommande',details:'Amprolium (Vetacox, Amprol) ou Toltrazuril (Baycox) ou Diclazuril (Diclacox). Indispensable si litière humide, densité élevée ou saison des pluies.',cost:'~3 000-6 000 FCFA',qty:'Selon notice'},
-{dayOffset:21,name:'Newcastle rappel (Lasota ou Clone 30)',route:'Eau de boisson',type:'obligatoire',details:'Rappel indispensable. Souche Lasota (CEVAC Lasota) ou Clone 30 (Nobilis Clone 30), plus immunogènes que HB1. + rappel IB H120 en eau de boisson.',cost:'~1 500-2 500 FCFA / 1000 doses',qty:'1 dose/poussin'},
+{dayOffset:21,name:'Newcastle rappel (Lasota ou Clone 30)',route:'Eau de boisson',type:'essentiel',details:'Rappel indispensable. Souche Lasota (CEVAC Lasota) ou Clone 30 (Nobilis Clone 30), plus immunogènes que HB1. + rappel IB H120 en eau de boisson.',cost:'~1 500-2 500 FCFA / 1000 doses',qty:'1 dose/poussin'},
 {dayOffset:24,name:'Anti-stress + Hépatoprotecteur',route:'Eau de boisson — 3 jours (J24-J26)',type:'recommande',details:'Protecteur hépato-rénal (Vigosine, Héparenol, Hépaturyl, Néphyryl). Soutient le foie et les reins après les vaccinations multiples.',cost:'~3 000-5 000 FCFA / flacon',qty:'Selon notice'},
 {dayOffset:28,name:'Newcastle 3ème rappel + IB (si abattage tardif)',route:'Eau de boisson',type:'recommande',details:'Obligatoire si abattage après 42 jours. Lasota ou Clone 30 + H120. Pour les zones à très forte pression Newcastle.',cost:'~1 500-2 500 FCFA / 1000 doses',qty:'1 dose/poussin'},
 {dayOffset:30,name:'Anticoccidien 2ème cure (si nécessaire)',route:'Eau de boisson — 3 jours',type:'recommande',details:'2ème cure anticoccidienne si litière humide ou signes de coccidiose (fientes sanglantes). Alterner les molécules.',cost:'~3 000-6 000 FCFA',qty:'Selon produit'},
@@ -3894,72 +3913,72 @@ chair: [
 {dayOffset:56,name:'🏁 Abattage tardif (56 jours)',route:'—',type:'optionnel',details:'Pour Sasso, souches locales améliorées ou marchés demandant des poulets plus lourds (2.5-3.5 kg). Rappeler Newcastle + vermifuger avant.'},
 ],
 ponte: [
-{dayOffset:0,name:'Marek (HVT + Rispens) — au couvoir',route:'Injection SC au couvoir',type:'obligatoire',details:'Double vaccination Marek obligatoire (CEVAC MD HVT+Rispens ou Nobilis Rismavac+HVT). Cycle long = protection maximale nécessaire. Exiger le certificat du couvoir.',cost:'Inclus dans le prix',qty:'1 dose/poussin (0.2ml SC)'},
-{dayOffset:0,name:'Newcastle + IB (HB1 + H120)',route:'Trempage de bec ou nébulisation',type:'obligatoire',details:'Au couvoir ou à la réception (Pestos, CEVAC Vitabron L, Avinew+H120). Trempage de bec en eau minérale + vaccin.',cost:'~2 000-4 000 FCFA / 1000 doses',qty:'1 dose/poussin'},
+{dayOffset:0,name:'Marek (HVT + Rispens) — au couvoir',route:'Injection SC au couvoir',type:'essentiel',details:'Double vaccination Marek obligatoire (CEVAC MD HVT+Rispens ou Nobilis Rismavac+HVT). Cycle long = protection maximale nécessaire. Exiger le certificat du couvoir.',cost:'Inclus dans le prix',qty:'1 dose/poussin (0.2ml SC)'},
+{dayOffset:0,name:'Newcastle + IB (HB1 + H120)',route:'Trempage de bec ou nébulisation',type:'essentiel',details:'Au couvoir ou à la réception (Pestos, CEVAC Vitabron L, Avinew+H120). Trempage de bec en eau minérale + vaccin.',cost:'~2 000-4 000 FCFA / 1000 doses',qty:'1 dose/poussin'},
 {dayOffset:2,name:'Anti-stress (J2-J4)',route:'Eau de boisson — 3 jours',type:'recommande',details:'Colistine + Vitamines ou Vitaflash. Prévention du stress post-transport.',cost:'~2 000-4 000 FCFA',qty:'Selon notice'},
-{dayOffset:7,name:'Gumboro 1ère dose',route:'Eau de boisson',type:'obligatoire',details:'Souche intermédiaire. Eau minérale + lait écrémé. Couper l\'eau 2-3h avant. Abreuvoirs plastique uniquement.',cost:'~2 000-4 000 FCFA / 1000 doses',qty:'1 dose/poussin'},
-{dayOffset:10,name:'Newcastle + IB rappel',route:'Goutte oculaire ou eau de boisson',type:'obligatoire',details:'HB1 ou Clone 30 + H120. En zones à risque, ajouter souche variante IB.',cost:'~2 000-3 000 FCFA / 1000 doses',qty:'1 dose/poussin'},
-{dayOffset:14,name:'Gumboro 2ème dose (intermédiaire plus)',route:'Eau de boisson',type:'obligatoire',details:'CEVAC IBDL, Nobilis 228E ou Hipragumboro GM97.',cost:'~2 500-5 000 FCFA / 1000 doses',qty:'1 dose'},
+{dayOffset:7,name:'Gumboro 1ère dose',route:'Eau de boisson',type:'essentiel',details:'Souche intermédiaire. Eau minérale + lait écrémé. Couper l\'eau 2-3h avant. Abreuvoirs plastique uniquement.',cost:'~2 000-4 000 FCFA / 1000 doses',qty:'1 dose/poussin'},
+{dayOffset:10,name:'Newcastle + IB rappel',route:'Goutte oculaire ou eau de boisson',type:'essentiel',details:'HB1 ou Clone 30 + H120. En zones à risque, ajouter souche variante IB.',cost:'~2 000-3 000 FCFA / 1000 doses',qty:'1 dose/poussin'},
+{dayOffset:14,name:'Gumboro 2ème dose (intermédiaire plus)',route:'Eau de boisson',type:'essentiel',details:'CEVAC IBDL, Nobilis 228E ou Hipragumboro GM97.',cost:'~2 500-5 000 FCFA / 1000 doses',qty:'1 dose'},
 {dayOffset:18,name:'Anticoccidien préventif (J18-J20)',route:'Eau de boisson — 3 jours',type:'recommande',details:'Amprolium ou Toltrazuril. Très important pendant la phase de croissance.',cost:'~3 000-6 000 FCFA',qty:'Selon notice'},
-{dayOffset:21,name:'Newcastle rappel (Lasota) + IB H120',route:'Eau de boisson',type:'obligatoire',details:'Rappel indispensable. Lasota + H120 en eau de boisson.',cost:'~1 500-2 500 FCFA / 1000 doses',qty:'1 dose'},
-{dayOffset:28,name:'Newcastle 3ème rappel + IB',route:'Eau de boisson',type:'obligatoire',details:'Protection renforcée avant les vaccins injectables.',cost:'~2 000-3 000 FCFA / 1000 doses',qty:'1 dose'},
+{dayOffset:21,name:'Newcastle rappel (Lasota) + IB H120',route:'Eau de boisson',type:'essentiel',details:'Rappel indispensable. Lasota + H120 en eau de boisson.',cost:'~1 500-2 500 FCFA / 1000 doses',qty:'1 dose'},
+{dayOffset:28,name:'Newcastle 3ème rappel + IB',route:'Eau de boisson',type:'essentiel',details:'Protection renforcée avant les vaccins injectables.',cost:'~2 000-3 000 FCFA / 1000 doses',qty:'1 dose'},
 {dayOffset:35,name:'Encéphalomyélite aviaire (AE)',route:'Eau de boisson',type:'recommande',details:'Vaccin vivant. Important pour les futures pondeuses. NE PAS administrer après 10 semaines d\'âge ni pendant la ponte.',cost:'~3 000-5 000 FCFA / 1000 doses',qty:'1 dose'},
-{dayOffset:42,name:'Vermifugation 1ère',route:'Eau de boisson',type:'obligatoire',details:'Lévamisole (Levasol) ou Pipérazine. Répéter tous les 2-3 mois.',cost:'~2 000-3 000 FCFA',qty:'Selon produit'},
-{dayOffset:49,name:'Variole aviaire (7 semaines)',route:'Scarification — transfixion de l\'aile',type:'obligatoire',details:'Vaccin vivant (Diftosec ou équivalent). Tremper la double aiguille cannelée dans le vaccin, percer la membrane alaire. Vérifier la prise 7-10 jours après : gonflement au point = succès. Si ≥90% de prises = lot bien vacciné.',cost:'~2 000-4 000 FCFA / 1000 doses',qty:'1 piqûre/aile'},
-{dayOffset:49,name:'Newcastle inactivé (Newcavac/Imopest)',route:'Injection IM cuisse ou SC cou',type:'obligatoire',details:'Vaccin huileux inactivé (Newcavac, Imopest, Pestos inactivé). Immunité longue durée (6-12 mois). Aiguille 18G. Injecter 0.5ml. Conserver entre 2-8°C, NE PAS congeler.',cost:'~4 000-8 000 FCFA / 1000 doses',qty:'0.5ml / sujet'},
+{dayOffset:42,name:'Vermifugation 1ère',route:'Eau de boisson',type:'essentiel',details:'Lévamisole (Levasol) ou Pipérazine. Répéter tous les 2-3 mois.',cost:'~2 000-3 000 FCFA',qty:'Selon produit'},
+{dayOffset:49,name:'Variole aviaire (7 semaines)',route:'Scarification — transfixion de l\'aile',type:'essentiel',details:'Vaccin vivant (Diftosec ou équivalent). Tremper la double aiguille cannelée dans le vaccin, percer la membrane alaire. Vérifier la prise 7-10 jours après : gonflement au point = succès. Si ≥90% de prises = lot bien vacciné.',cost:'~2 000-4 000 FCFA / 1000 doses',qty:'1 piqûre/aile'},
+{dayOffset:49,name:'Newcastle inactivé (Newcavac/Imopest)',route:'Injection IM cuisse ou SC cou',type:'essentiel',details:'Vaccin huileux inactivé (Newcavac, Imopest, Pestos inactivé). Immunité longue durée (6-12 mois). Aiguille 18G. Injecter 0.5ml. Conserver entre 2-8°C, NE PAS congeler.',cost:'~4 000-8 000 FCFA / 1000 doses',qty:'0.5ml / sujet'},
 {dayOffset:56,name:'Anti-stress + Hépatoprotecteur',route:'Eau de boisson — 5 jours',type:'recommande',details:'AD3EC + hépatoprotecteur après les injections. Vigosine ou Héparenol.',cost:'~3 000-5 000 FCFA',qty:'1ml/L'},
 {dayOffset:70,name:'Coryza infectieux 1ère dose',route:'Injection SC cou',type:'recommande',details:'Recommandé en zone endémique (Avicor, Cevac Coryza). 2 doses à 4 semaines d\'intervalle. Peut être combiné avec rappel choléra.',cost:'~5 000-10 000 FCFA / 1000 doses',qty:'0.5ml / sujet'},
 {dayOffset:84,name:'Choléra aviaire 1ère dose',route:'Injection SC',type:'recommande',details:'Anti-pasteurellose (Cholervac ou équivalent). Surtout si historique dans l\'élevage ou la zone.',cost:'~4 000-8 000 FCFA / 1000 doses',qty:'0.5ml / sujet'},
 {dayOffset:98,name:'Coryza 2ème dose + Newcastle rappel vivant',route:'SC + eau de boisson',type:'recommande',details:'Rappel Coryza (SC) + Newcastle vivant Lasota ou Clone 30 (eau de boisson). Préparer l\'immunité pré-ponte.',cost:'~3 000 FCFA',qty:'0.5ml SC + 1 dose orale'},
 {dayOffset:112,name:'EDS (Egg Drop Syndrome)',route:'Injection SC',type:'recommande',details:'Prévention de la chute de ponte virale. Administrer AVANT l\'entrée en production.',cost:'~5 000-10 000 FCFA / 1000 doses',qty:'0.5ml / sujet'},
 {dayOffset:119,name:'Choléra aviaire 2ème dose',route:'Injection SC',type:'recommande',details:'Rappel choléra 4-5 semaines après la 1ère dose.',cost:'Inclus 1ère commande',qty:'0.5ml / sujet'},
-{dayOffset:126,name:'Newcastle + IB + EDS inactivé (trivac)',route:'Injection IM cuisse',type:'obligatoire',details:'Vaccin trivalent pré-ponte (Nobilis Newca+IB+EDS ou équivalent). Dernière grande vaccination avant la production. NE PAS utiliser de vaccin vivant IB pendant la ponte (risque de chute de ponte).',cost:'~8 000-15 000 FCFA / 1000 doses',qty:'0.5ml / sujet'},
+{dayOffset:126,name:'Newcastle + IB + EDS inactivé (trivac)',route:'Injection IM cuisse',type:'essentiel',details:'Vaccin trivalent pré-ponte (Nobilis Newca+IB+EDS ou équivalent). Dernière grande vaccination avant la production. NE PAS utiliser de vaccin vivant IB pendant la ponte (risque de chute de ponte).',cost:'~8 000-15 000 FCFA / 1000 doses',qty:'0.5ml / sujet'},
 {dayOffset:133,name:'Transfert au poulailler de ponte',route:'—',type:'optionnel',details:'Transfert à 18-19 semaines. Programme lumineux croissant : augmenter de 30 min/semaine jusqu\'à 14-16h/jour. Aliment pré-ponte puis pondeuse (3.5-4% calcium).'},
 {dayOffset:140,name:'🥚 Début de ponte (~20 semaines)',route:'—',type:'optionnel',details:'Pic de ponte attendu vers 26-30 semaines (90-95% pour Isa Brown, Lohmann). Surveiller la qualité de la coquille.'},
-{dayOffset:999,name:'📋 En production : Newcastle Lasota/Clone 30',route:'Eau de boisson — tous les 2-3 mois',type:'obligatoire',details:'Rappel vivant obligatoire. ÉVITER la souche Lasota juste avant ou pendant le pic de ponte (légère chute possible). Préférer Clone 30 pendant la ponte.'},
-{dayOffset:999,name:'📋 En production : Vermifugation',route:'Eau de boisson — tous les 3 mois',type:'obligatoire',details:'Lévamisole ou Albendazole. Respecter le délai d\'attente pour les œufs (7-14 jours selon produit).'},
-{dayOffset:999,name:'⚠️ En production : NE PAS vacciner avec IB vivant',route:'—',type:'obligatoire',details:'Les vaccins vivants contre la Bronchite Infectieuse peuvent provoquer une chute de ponte sévère. Utiliser uniquement des rappels IB inactivés (injection) pendant la période de production.'},
+{dayOffset:999,name:'📋 En production : Newcastle Lasota/Clone 30',route:'Eau de boisson — tous les 2-3 mois',type:'essentiel',details:'Rappel vivant obligatoire. ÉVITER la souche Lasota juste avant ou pendant le pic de ponte (légère chute possible). Préférer Clone 30 pendant la ponte.'},
+{dayOffset:999,name:'📋 En production : Vermifugation',route:'Eau de boisson — tous les 3 mois',type:'essentiel',details:'Lévamisole ou Albendazole. Respecter le délai d\'attente pour les œufs (7-14 jours selon produit).'},
+{dayOffset:999,name:'⚠️ En production : NE PAS vacciner avec IB vivant',route:'—',type:'essentiel',details:'Les vaccins vivants contre la Bronchite Infectieuse peuvent provoquer une chute de ponte sévère. Utiliser uniquement des rappels IB inactivés (injection) pendant la période de production.'},
 ],
 local: [
 {dayOffset:0,name:'Réception des poussins — eau sucrée',route:'Eau de boisson',type:'recommande',details:'À la réception : eau tiède + sucre (20g/L) ou glucose pendant les premières heures. Aide à récupérer du stress du transport.',cost:'Gratuit',qty:'20g sucre / litre'},
-{dayOffset:7,name:'Newcastle (HB1)',route:'Goutte oculaire (1 goutte/œil)',type:'obligatoire',details:'LA vaccination minimale indispensable en élevage traditionnel. Protège contre la pseudo-peste, maladie n°1 en Afrique. Achetez le vaccin en pharmacie vétérinaire, transportez dans une glacière. Utiliser dans les 2h après ouverture.',cost:'~1 500-2 500 FCFA / 1000 doses',qty:'1 goutte/œil'},
+{dayOffset:7,name:'Newcastle (HB1)',route:'Goutte oculaire (1 goutte/œil)',type:'essentiel',details:'LA vaccination minimale indispensable en élevage traditionnel. Protège contre la pseudo-peste, maladie n°1 en Afrique. Achetez le vaccin en pharmacie vétérinaire, transportez dans une glacière. Utiliser dans les 2h après ouverture.',cost:'~1 500-2 500 FCFA / 1000 doses',qty:'1 goutte/œil'},
 {dayOffset:8,name:'Anti-stress (J8-J10)',route:'Eau de boisson — 3 jours',type:'recommande',details:'Vitamines AD3EC + électrolytes après la vaccination.',cost:'~2 000-4 000 FCFA',qty:'1ml/L'},
-{dayOffset:21,name:'Newcastle rappel (Lasota)',route:'Eau de boisson ou goutte oculaire',type:'obligatoire',details:'Rappel indispensable 2 semaines après la 1ère dose. Pour l\'eau de boisson : couper l\'eau le matin, vacciner à midi avec eau de puits NON chlorée + poudre de lait (1 cuillère à soupe/L). Abreuvoirs plastique uniquement.',cost:'~1 500-2 500 FCFA / 1000 doses',qty:'1 dose'},
+{dayOffset:21,name:'Newcastle rappel (Lasota)',route:'Eau de boisson ou goutte oculaire',type:'essentiel',details:'Rappel indispensable 2 semaines après la 1ère dose. Pour l\'eau de boisson : couper l\'eau le matin, vacciner à midi avec eau de puits NON chlorée + poudre de lait (1 cuillère à soupe/L). Abreuvoirs plastique uniquement.',cost:'~1 500-2 500 FCFA / 1000 doses',qty:'1 dose'},
 {dayOffset:30,name:'Vermifugation',route:'Dans la nourriture ou l\'eau',type:'recommande',details:'Graines de papaye fraîches écrasées (naturel, gratuit) ou Lévamisole/Pipérazine (chimique). Les poulets en parcours libre attrapent facilement des vers (Ascaris, Capillaria).',cost:'Gratuit (papaye) ou ~2 000 FCFA',qty:'1 c.à.c papaye/poulet ou selon notice'},
 {dayOffset:42,name:'Variole aviaire',route:'Scarification (membrane de l\'aile)',type:'recommande',details:'Très recommandé en zone à moustiques (saison des pluies). Percer la membrane alaire avec la double aiguille trempée dans le vaccin. Vérifier la prise après 7-10 jours.',cost:'~2 000-4 000 FCFA / 1000 doses',qty:'1 piqûre/aile'},
-{dayOffset:56,name:'Newcastle rappel (Lasota)',route:'Eau de boisson',type:'obligatoire',details:'Rappel régulier. La protection des vaccins vivants dure 2-3 mois seulement.',cost:'~1 500-2 500 FCFA / 1000 doses',qty:'1 dose'},
+{dayOffset:56,name:'Newcastle rappel (Lasota)',route:'Eau de boisson',type:'essentiel',details:'Rappel régulier. La protection des vaccins vivants dure 2-3 mois seulement.',cost:'~1 500-2 500 FCFA / 1000 doses',qty:'1 dose'},
 {dayOffset:60,name:'Newcastle inactivé injectable (option)',route:'Injection SC ou IM — 0.5ml',type:'recommande',details:'Alternative aux rappels fréquents : le vaccin inactivé (ITA-NEW, Imopest) confère une protection de 6 mois à 1 an en primo-vaccination et 1 an en rappel. Idéal pour l\'élevage villageois où les rappels oraux sont difficiles à faire régulièrement.',cost:'~4 000-8 000 FCFA / 1000 doses',qty:'0.5ml / sujet'},
 {dayOffset:90,name:'Vermifugation (2ème)',route:'Eau ou nourriture',type:'recommande',details:'Alterner ail frais écrasé (50g/5L eau pendant 3 jours) et vermifuge chimique.',cost:'~2 000 FCFA ou gratuit',qty:'Selon produit'},
-{dayOffset:90,name:'Newcastle rappel',route:'Eau de boisson',type:'obligatoire',details:'3ème rappel si vaccin vivant utilisé. Si vacciné avec inactivé injectable à J60, ce rappel n\'est pas nécessaire.',cost:'~1 500-2 500 FCFA',qty:'1 dose'},
+{dayOffset:90,name:'Newcastle rappel',route:'Eau de boisson',type:'essentiel',details:'3ème rappel si vaccin vivant utilisé. Si vacciné avec inactivé injectable à J60, ce rappel n\'est pas nécessaire.',cost:'~1 500-2 500 FCFA',qty:'1 dose'},
 {dayOffset:120,name:'Choléra aviaire (si zone à risque)',route:'Injection SC',type:'recommande',details:'Si des cas de mort subite avec crête bleue (cyanose) et diarrhée verdâtre ont été signalés dans votre zone ou chez les voisins.',cost:'~4 000-8 000 FCFA / 1000 doses',qty:'0.5ml / sujet'},
-{dayOffset:150,name:'📋 Rappels : Newcastle',route:'Eau de boisson — tous les 2-3 mois',type:'obligatoire',details:'RÈGLE D\'OR : Ne jamais oublier le rappel Newcastle. C\'est LA vaccination la plus importante en élevage traditionnel. Si vacciné avec inactivé injectable : rappeler tous les 6-12 mois.'},
+{dayOffset:150,name:'📋 Rappels : Newcastle',route:'Eau de boisson — tous les 2-3 mois',type:'essentiel',details:'RÈGLE D\'OR : Ne jamais oublier le rappel Newcastle. C\'est LA vaccination la plus importante en élevage traditionnel. Si vacciné avec inactivé injectable : rappeler tous les 6-12 mois.'},
 {dayOffset:150,name:'📋 Rappels : Vermifugation',route:'Eau ou nourriture — tous les 3 mois',type:'recommande',details:'Alterner graines de papaye, ail frais, et vermifuge chimique (Lévamisole ou Pipérazine).'},
-{dayOffset:999,name:'⚠️ Avant chaque saison des pluies',route:'Newcastle + Vermifuge + Anti-parasitaire',type:'obligatoire',details:'Les épidémies (Newcastle, choléra, coccidiose) explosent en saison humide à cause de l\'humidité et des moustiques. Faire un rappel Newcastle + vermifugation + traitement anti-moustiques 2 semaines AVANT les premières pluies.'},
+{dayOffset:999,name:'⚠️ Avant chaque saison des pluies',route:'Newcastle + Vermifuge + Anti-parasitaire',type:'essentiel',details:'Les épidémies (Newcastle, choléra, coccidiose) explosent en saison humide à cause de l\'humidité et des moustiques. Faire un rappel Newcastle + vermifugation + traitement anti-moustiques 2 semaines AVANT les premières pluies.'},
 {dayOffset:999,name:'💡 Avant vente/fêtes (Tabaski, Noël...)',route:'Anti-stress + Vitamines — 3 jours',type:'optionnel',details:'AD3EC ou complexe vitaminé 3 jours avant le transport/vente. Réduit le stress et la mortalité pendant le transport.'},
 ],
 reproducteur: [
-{dayOffset:0,name:'Marek (HVT + Rispens + SB1)',route:'Injection SC au couvoir',type:'obligatoire',details:'Triple vaccination Marek obligatoire (CEVAC MD HVT+Rispens+SB1). Immunité maximale requise pour les reproducteurs (cycle très long).',cost:'Inclus prix poussin',qty:'1 dose (0.2ml SC)'},
-{dayOffset:0,name:'Newcastle + IB (HB1 + H120)',route:'Nébulisation ou trempage de bec',type:'obligatoire',details:'Au couvoir.',cost:'Inclus',qty:'1 dose'},
-{dayOffset:5,name:'Newcastle (HB1)',route:'Goutte oculaire',type:'obligatoire',details:'1 goutte/œil. Renforce la primo-vaccination.',cost:'~1 500-2 500 FCFA / 1000',qty:'1 goutte'},
-{dayOffset:7,name:'Gumboro 1ère dose',route:'Eau de boisson',type:'obligatoire',details:'Souche intermédiaire. Eau non chlorée + lait écrémé.',cost:'~2 000-4 000 FCFA / 1000',qty:'1 dose'},
-{dayOffset:14,name:'Newcastle rappel (Lasota) + IB',route:'Eau de boisson',type:'obligatoire',details:'Rappel Newcastle + Bronchite infectieuse.',cost:'~2 000-3 000 FCFA / 1000',qty:'1 dose chaque'},
-{dayOffset:17,name:'Gumboro 2ème dose (intermédiaire plus)',route:'Eau de boisson',type:'obligatoire',details:'CEVAC IBDL ou Nobilis 228E.',cost:'~2 500-5 000 FCFA / 1000',qty:'1 dose'},
-{dayOffset:21,name:'Newcastle rappel + IB',route:'Eau de boisson',type:'obligatoire',details:'3ème passage Newcastle.',cost:'~2 000 FCFA / 1000',qty:'1 dose'},
+{dayOffset:0,name:'Marek (HVT + Rispens + SB1)',route:'Injection SC au couvoir',type:'essentiel',details:'Triple vaccination Marek obligatoire (CEVAC MD HVT+Rispens+SB1). Immunité maximale requise pour les reproducteurs (cycle très long).',cost:'Inclus prix poussin',qty:'1 dose (0.2ml SC)'},
+{dayOffset:0,name:'Newcastle + IB (HB1 + H120)',route:'Nébulisation ou trempage de bec',type:'essentiel',details:'Au couvoir.',cost:'Inclus',qty:'1 dose'},
+{dayOffset:5,name:'Newcastle (HB1)',route:'Goutte oculaire',type:'essentiel',details:'1 goutte/œil. Renforce la primo-vaccination.',cost:'~1 500-2 500 FCFA / 1000',qty:'1 goutte'},
+{dayOffset:7,name:'Gumboro 1ère dose',route:'Eau de boisson',type:'essentiel',details:'Souche intermédiaire. Eau non chlorée + lait écrémé.',cost:'~2 000-4 000 FCFA / 1000',qty:'1 dose'},
+{dayOffset:14,name:'Newcastle rappel (Lasota) + IB',route:'Eau de boisson',type:'essentiel',details:'Rappel Newcastle + Bronchite infectieuse.',cost:'~2 000-3 000 FCFA / 1000',qty:'1 dose chaque'},
+{dayOffset:17,name:'Gumboro 2ème dose (intermédiaire plus)',route:'Eau de boisson',type:'essentiel',details:'CEVAC IBDL ou Nobilis 228E.',cost:'~2 500-5 000 FCFA / 1000',qty:'1 dose'},
+{dayOffset:21,name:'Newcastle rappel + IB',route:'Eau de boisson',type:'essentiel',details:'3ème passage Newcastle.',cost:'~2 000 FCFA / 1000',qty:'1 dose'},
 {dayOffset:28,name:'Anticoccidien préventif',route:'Eau de boisson — 3 jours',type:'recommande',details:'Amprolium ou Toltrazuril.',cost:'~3 000-6 000 FCFA',qty:'Selon notice'},
-{dayOffset:35,name:'Encéphalomyélite aviaire (AE)',route:'Eau de boisson',type:'obligatoire',details:'Crucial pour les reproducteurs — transmet l\'immunité maternelle aux poussins via les anticorps dans le jaune d\'œuf. NE PAS administrer après 10 semaines.',cost:'~3 000-5 000 FCFA / 1000',qty:'1 dose'},
-{dayOffset:42,name:'Vermifugation 1ère',route:'Eau de boisson',type:'obligatoire',details:'Lévamisole ou Pipérazine.',cost:'~2 000 FCFA',qty:'Selon produit'},
-{dayOffset:49,name:'Variole aviaire',route:'Scarification',type:'obligatoire',details:'Obligatoire pour les reproducteurs. Vérifier la prise à J+7-10.',cost:'~2 000-4 000 FCFA / 1000',qty:'1 piqûre/aile'},
-{dayOffset:49,name:'Newcastle inactivé (Imopest/Newcavac)',route:'Injection IM cuisse',type:'obligatoire',details:'Vaccin huileux longue durée.',cost:'~4 000-8 000 FCFA / 1000',qty:'0.5ml/sujet'},
-{dayOffset:70,name:'Coryza 1ère dose',route:'Injection SC cou',type:'obligatoire',details:'Indispensable pour les reproducteurs.',cost:'~5 000-10 000 FCFA / 1000',qty:'0.5ml'},
-{dayOffset:84,name:'Choléra 1ère dose',route:'Injection SC',type:'obligatoire',details:'Protection des géniteurs.',cost:'~4 000-8 000 FCFA / 1000',qty:'0.5ml'},
+{dayOffset:35,name:'Encéphalomyélite aviaire (AE)',route:'Eau de boisson',type:'essentiel',details:'Crucial pour les reproducteurs — transmet l\'immunité maternelle aux poussins via les anticorps dans le jaune d\'œuf. NE PAS administrer après 10 semaines.',cost:'~3 000-5 000 FCFA / 1000',qty:'1 dose'},
+{dayOffset:42,name:'Vermifugation 1ère',route:'Eau de boisson',type:'essentiel',details:'Lévamisole ou Pipérazine.',cost:'~2 000 FCFA',qty:'Selon produit'},
+{dayOffset:49,name:'Variole aviaire',route:'Scarification',type:'essentiel',details:'Obligatoire pour les reproducteurs. Vérifier la prise à J+7-10.',cost:'~2 000-4 000 FCFA / 1000',qty:'1 piqûre/aile'},
+{dayOffset:49,name:'Newcastle inactivé (Imopest/Newcavac)',route:'Injection IM cuisse',type:'essentiel',details:'Vaccin huileux longue durée.',cost:'~4 000-8 000 FCFA / 1000',qty:'0.5ml/sujet'},
+{dayOffset:70,name:'Coryza 1ère dose',route:'Injection SC cou',type:'essentiel',details:'Indispensable pour les reproducteurs.',cost:'~5 000-10 000 FCFA / 1000',qty:'0.5ml'},
+{dayOffset:84,name:'Choléra 1ère dose',route:'Injection SC',type:'essentiel',details:'Protection des géniteurs.',cost:'~4 000-8 000 FCFA / 1000',qty:'0.5ml'},
 {dayOffset:91,name:'Réovirose (arthrite virale)',route:'Injection SC',type:'recommande',details:'Prévient les problèmes articulaires et la baisse de fertilité. Important pour la qualité des œufs à couver.',cost:'~6 000-12 000 FCFA / 1000',qty:'0.5ml'},
-{dayOffset:98,name:'Coryza 2ème dose',route:'Injection SC',type:'obligatoire',details:'Rappel 4 semaines après la 1ère dose.',cost:'Inclus',qty:'0.5ml'},
+{dayOffset:98,name:'Coryza 2ème dose',route:'Injection SC',type:'essentiel',details:'Rappel 4 semaines après la 1ère dose.',cost:'Inclus',qty:'0.5ml'},
 {dayOffset:105,name:'Mycoplasme (MG + MS)',route:'Injection SC',type:'recommande',details:'Réduit la transmission verticale (mère → œuf → poussin). Améliore la qualité des œufs à couver.',cost:'~8 000-15 000 FCFA / 1000',qty:'0.5ml'},
-{dayOffset:112,name:'Newcastle + IB + EDS (trivac)',route:'Injection IM cuisse',type:'obligatoire',details:'Vaccin trivalent pré-production. NE PAS utiliser de vaccin IB vivant après cette étape.',cost:'~8 000-15 000 FCFA / 1000',qty:'0.5ml'},
-{dayOffset:119,name:'Choléra 2ème dose',route:'Injection SC',type:'obligatoire',details:'Rappel choléra.',cost:'Inclus',qty:'0.5ml'},
+{dayOffset:112,name:'Newcastle + IB + EDS (trivac)',route:'Injection IM cuisse',type:'essentiel',details:'Vaccin trivalent pré-production. NE PAS utiliser de vaccin IB vivant après cette étape.',cost:'~8 000-15 000 FCFA / 1000',qty:'0.5ml'},
+{dayOffset:119,name:'Choléra 2ème dose',route:'Injection SC',type:'essentiel',details:'Rappel choléra.',cost:'Inclus',qty:'0.5ml'},
 {dayOffset:126,name:'Salmonellose (SE/ST)',route:'Injection IM',type:'recommande',details:'Réduit la contamination des œufs à couver par Salmonella. Rappels à 40 et 55 semaines.',cost:'~10 000-18 000 FCFA / 1000',qty:'0.5ml'},
 {dayOffset:140,name:'🥚 Début production (~20 sem)',route:'—',type:'optionnel',details:'Ratio coqs/poules : 1/10 à 1/12. Programme lumineux 14-16h/jour. Aliment reproducteur.'},
-{dayOffset:999,name:'📋 Rappels en production',route:'Variable',type:'obligatoire',details:'Newcastle Lasota/Clone 30 : tous les 2-3 mois (eau de boisson, ÉVITER Lasota au pic). Vermifugation : tous les 2-3 mois. Salmonellose : rappels injectables à 40 et 55 semaines.'},
+{dayOffset:999,name:'📋 Rappels en production',route:'Variable',type:'essentiel',details:'Newcastle Lasota/Clone 30 : tous les 2-3 mois (eau de boisson, ÉVITER Lasota au pic). Vermifugation : tous les 2-3 mois. Salmonellose : rappels injectables à 40 et 55 semaines.'},
 ]
 };
 
@@ -4016,7 +4035,7 @@ document.getElementById('dayCounterPhase').textContent = phase;
 
 // Summary with TOTAL BUDGET calculation
 if(startDate) {
-const oblCount = program.filter(v=>v.type==='obligatoire' && v.dayOffset < 900).length;
+const oblCount = program.filter(v=>v.type==='essentiel' && v.dayOffset < 900).length;
 const recCount = program.filter(v=>v.type==='recommande').length;
 const typeLabels = {chair:'Poulet de chair',ponte:'Pondeuse',local:'Race locale',reproducteur:'Reproducteur'};
 
@@ -4046,13 +4065,13 @@ const progressPct = totalCount > 0 ? Math.round(doneCount/totalCount*100) : 0;
 summary.style.display = 'flex';
 summary.innerHTML = `
 <span>📋 <strong>${typeLabels[type]}</strong></span>
-<span>🔴 <strong>${oblCount}</strong> obligatoires</span>
+<span>🔴 <strong>${oblCount}</strong> essentiels</span>
 <span>🟡 <strong>${recCount}</strong> recommandés</span>
 ${flockSize?`<span>🐔 <strong>${flockSize}</strong> sujets</span>`:''}
 <span>📅 <strong>${startDate.toLocaleDateString('fr-FR')}</strong></span>
 <span style="background:linear-gradient(135deg,#27713B,#4ADE80);color:#fff;padding:4px 12px;border-radius:8px;font-weight:700;">✅ ${doneCount}/${totalCount} (${progressPct}%)</span>
-${budgetMin>0?`<span style="background:linear-gradient(135deg,#E8872A,#F5B041);color:#fff;padding:4px 12px;border-radius:8px;font-weight:700;">💰 Budget : ${budgetMin.toLocaleString('fr-FR')}-${budgetMax.toLocaleString('fr-FR')} FCFA</span>`:''}
-${flockSize>0&&budgetMin>0?`<span style="font-size:11px;color:var(--text-light);">≈ ${Math.round(budgetMin/flockSize)}-${Math.round(budgetMax/flockSize)} FCFA/poussin</span>`:''}
+${budgetMin>0?`<span style="background:linear-gradient(135deg,#E8872A,#F5B041);color:#fff;padding:4px 12px;border-radius:8px;font-weight:700;">💰 Budget indicatif : ${budgetMin.toLocaleString('fr-FR')}-${budgetMax.toLocaleString('fr-FR')} FCFA</span>`:''}
+${flockSize>0&&budgetMin>0?`<span style="font-size:11px;color:var(--text-light);">≈ ${Math.round(budgetMin/flockSize)}-${Math.round(budgetMax/flockSize)} FCFA/poussin (prix variables selon pays)</span>`:''}
 `;
 
 // Auto-schedule notifications on first render with date
@@ -4067,8 +4086,8 @@ let doneList = [];
 try { doneList = JSON.parse(localStorage.getItem(doneKey) || '[]'); } catch(e) {}
 
 container.innerHTML = program.map((v, i) => {
-const tagClass = v.type === 'obligatoire' ? 'obligatoire' : v.type === 'recommande' ? 'recommande' : 'optionnel';
-const tagLabel = v.type === 'obligatoire' ? '🔴 Obligatoire' : v.type === 'recommande' ? '🟡 Recommandé' : '⚪ Info';
+const tagClass = v.type === 'essentiel' ? 'obligatoire' : v.type === 'recommande' ? 'recommande' : 'optionnel';
+const tagLabel = v.type === 'essentiel' ? '🔴 Essentiel' : v.type === 'recommande' ? '🟡 Recommandé' : '⚪ Info';
 
 // Unique ID for this vaccine step
 const vaxId = type + '_' + i;
@@ -4101,16 +4120,17 @@ const dayLabel = v.dayOffset >= 999 ? '🔁 Récurrent' : v.dayOffset === 0 ? 'J
 // Calculate quantity needed for this flock
 let quantityInfo = '';
 if(flockSize > 0 && v.qty && v.dayOffset < 900 && v.type !== 'optionnel') {
+// Apply 15% safety margin (loss during reconstitution, etc.)
+const flockWithMargin = Math.ceil(flockSize * 1.15);
 // Detect unit from qty (doses, ml, etc.)
 if(v.qty.includes('dose')) {
-const flaconSize = 1000; // Standard flacon size
-const flacons = Math.ceil(flockSize / flaconSize);
-quantityInfo = `<br>🧮 <strong>Pour ${flockSize} sujets :</strong> ${flacons} flacon${flacons>1?'s':''} de ${flaconSize} doses (${flockSize} doses nécessaires)`;
+const flaconSize = 1000;
+const flacons = Math.ceil(flockWithMargin / flaconSize);
+quantityInfo = `<br>🧮 <strong>Pour ${flockSize} sujets :</strong> prévoir ${flockWithMargin} doses (avec marge +15%), soit ${flacons} flacon${flacons>1?'s':''} de ${flaconSize} doses`;
 } else if(v.qty.includes('0.5ml')) {
-const mlTotal = flockSize * 0.5;
-quantityInfo = `<br>🧮 <strong>Pour ${flockSize} sujets :</strong> ${mlTotal}ml soit ${Math.ceil(mlTotal/500)} flacon${mlTotal>500?'s':''} de 500ml`;
+const mlTotal = Math.ceil(flockWithMargin * 0.5);
+quantityInfo = `<br>🧮 <strong>Pour ${flockSize} sujets :</strong> prévoir ${mlTotal}ml (avec marge +15%), soit ${Math.ceil(mlTotal/500)} flacon${mlTotal>500?'s':''} de 500ml`;
 } else if(v.qty.includes('1ml/L') || v.qty.includes('1ml / litre')) {
-// Estimate water consumption: ~25ml/day/chick
 const waterL = Math.ceil(flockSize * 0.025);
 quantityInfo = `<br>🧮 <strong>Pour ${flockSize} sujets :</strong> ~${waterL}L d'eau traitée/jour`;
 }
