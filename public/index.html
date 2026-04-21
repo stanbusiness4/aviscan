@@ -903,13 +903,28 @@ font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s;
 <button class="modal-close" onclick="closeAuthModal()">×</button>
 <div id="authStep1">
 <h2>🔐 Accès Traitements</h2>
-<p class="modal-sub">Entrez votre adresse email autorisée pour débloquer les traitements détaillés.</p>
+<p class="modal-sub">Entrez votre email d'abonné. Un code de vérification vous sera envoyé.</p>
 <div class="error-msg" id="authError1"></div>
 <div class="success-msg" id="authSuccess1"></div>
 <div class="info-msg" id="authInfo1"></div>
 <label>Adresse email</label>
 <input type="email" id="authEmail" placeholder="votre@email.com" onkeydown="if(event.key==='Enter')submitEmail()">
-<button class="btn btn-primary" onclick="submitEmail()" id="btnSubmitEmail">🔓 Vérifier et débloquer</button>
+<button class="btn btn-primary" onclick="submitEmail()" id="btnSubmitEmail">📧 Recevoir le code</button>
+</div>
+<div id="authStep2" style="display:none;">
+<h2>🔑 Code de vérification</h2>
+<p class="modal-sub">Un code à 6 chiffres a été envoyé à <strong id="authStep2Email"></strong>. Saisissez-le ci-dessous (valable 10 minutes).</p>
+<div class="error-msg" id="authError2"></div>
+<div class="success-msg" id="authSuccess2"></div>
+<div class="info-msg" id="authInfo2"></div>
+<label>Code à 6 chiffres</label>
+<input type="text" id="authOTP" placeholder="123456" maxlength="6" inputmode="numeric" style="letter-spacing:8px;text-align:center;font-size:20px;font-weight:700;" onkeydown="if(event.key==='Enter')submitOTP()">
+<button class="btn btn-primary" onclick="submitOTP()" id="btnSubmitOTP">✅ Valider le code</button>
+<div style="text-align:center;margin-top:12px;">
+<a style="color:var(--primary);font-size:13px;cursor:pointer;font-weight:600;" onclick="resendOTP()" id="resendOTPLink">Renvoyer le code</a>
+<span style="color:var(--text-light);font-size:13px;margin:0 8px;">|</span>
+<a style="color:var(--text-light);font-size:13px;cursor:pointer;" onclick="backToStep1()">Changer d'email</a>
+</div>
 </div>
 </div>
 </div>
@@ -1920,6 +1935,21 @@ Nous écrire sur WhatsApp
 </button>
 </nav>
 
+<!-- EmailJS SDK (for OTP sending) -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+// EmailJS configuration - TO BE REPLACED WITH YOUR REAL VALUES FROM EMAILJS.COM
+const EMAILJS_CONFIG = {
+publicKey: '--L-qKPSFQIqwYrAa',
+serviceId: 'service_j1sslj5',
+templateId: 'template_n8dsihm'
+};
+// Initialize EmailJS when SDK loads
+if(typeof emailjs !== 'undefined') {
+try { emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey }); } catch(e) { console.warn('EmailJS init deferred:', e); }
+}
+</script>
+
 <script type="module">
 // ═══════════════════════════════════════════════════════════════════
 // 🔥 FIREBASE SETUP
@@ -2469,7 +2499,7 @@ if(isAuthenticated) return;
 openPaymentModal();
 }
 
-function closeAuthModal() { document.getElementById('authModal').classList.remove('show'); clearAuthMsgs(); }
+function closeAuthModal() { document.getElementById('authModal').classList.remove('show'); clearAuthMsgs(); backToStep1(); }
 
 function openPaymentModal() {
 document.getElementById('paymentModal').classList.add('show');
@@ -2483,7 +2513,7 @@ document.head.appendChild(s);
 }
 
 function closePaymentModal() { document.getElementById('paymentModal').classList.remove('show'); }
-function clearAuthMsgs() { ['authError1','authSuccess1','authInfo1'].forEach(id => { const el=document.getElementById(id); if(el){el.style.display='none'; el.textContent='';} }); }
+function clearAuthMsgs() { ['authError1','authSuccess1','authInfo1','authError2','authSuccess2','authInfo2'].forEach(id => { const el=document.getElementById(id); if(el){el.style.display='none'; el.textContent='';} }); }
 function showMsg(id,msg) { const el=document.getElementById(id); if(el){el.textContent=msg; el.style.display='block';} }
 
 async function fetchAllowedEmails() {
@@ -2693,47 +2723,213 @@ allowedEmails = await fetchAllowedEmails();
 
 if(allowedEmails === null) {
 showMsg('authError1','⚠️ Impossible de se connecter au serveur. Vérifiez votre connexion internet et réessayez.');
-btn.innerHTML='🔓 Vérifier et débloquer'; btn.disabled=false; return;
+btn.innerHTML='📧 Recevoir le code'; btn.disabled=false; return;
 }
 
 if(allowedEmails.length === 0) {
 showMsg('authError1','⚠️ La liste des emails autorisés est vide ou inaccessible. Contactez l\'administrateur.');
-btn.innerHTML='🔓 Vérifier et débloquer'; btn.disabled=false; return;
+btn.innerHTML='📧 Recevoir le code'; btn.disabled=false; return;
 }
 
 // Check if email is in the inactive list
 if(parsedEmailData && parsedEmailData.inactive.includes(email)) {
-// Distinguish: expired or manually disabled?
 const expStr = emailExpirations[email];
 if(expStr && isExpired(expStr)) {
 showMsg('authError1','⏰ Votre abonnement a expiré le ' + expStr + '. Renouvelez votre abonnement pour continuer.');
 } else {
 showMsg('authError1','🚫 Votre compte a été désactivé par l\'administrateur. Contactez-le pour réactiver votre accès.');
 }
-btn.innerHTML='🔓 Vérifier et débloquer'; btn.disabled=false; return;
+btn.innerHTML='📧 Recevoir le code'; btn.disabled=false; return;
 }
 
 if(!allowedEmails.includes(email)) {
 showMsg('authError1','❌ Cette adresse email n\'est pas autorisée. Contactez l\'administrateur pour obtenir l\'accès.');
-btn.innerHTML='🔓 Vérifier et débloquer'; btn.disabled=false; return;
+btn.innerHTML='📧 Recevoir le code'; btn.disabled=false; return;
 }
 
-// Succès
+// Email is valid — generate OTP and send via EmailJS
+const otp = Math.floor(100000 + Math.random() * 900000).toString();
+const otpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+const pendingOTP = { email, otp, expiry: otpExpiry, attempts: 0 };
+try { sessionStorage.setItem('hap_pending_otp', JSON.stringify(pendingOTP)); } catch(e) {}
+
+// Check EmailJS configured
+if(typeof emailjs === 'undefined' || EMAILJS_CONFIG.publicKey === 'YOUR_EMAILJS_PUBLIC_KEY') {
+// EmailJS not configured — skip OTP (development mode)
+console.warn('⚠️ EmailJS non configuré — OTP = ' + otp + ' (visible en console pour test)');
+showMsg('authInfo1','⚙️ Mode développement : code OTP dans la console (F12). Configurez EmailJS pour activer l\'envoi réel.');
+setTimeout(() => showStep2(email), 1500);
+btn.innerHTML='📧 Recevoir le code'; btn.disabled=false;
+return;
+}
+
+// Send via EmailJS
+emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
+to_email: email,
+otp_code: otp,
+app_name: 'AviaScan',
+expiry_minutes: '10'
+}).then(() => {
+showStep2(email);
+btn.innerHTML='📧 Recevoir le code'; btn.disabled=false;
+}).catch(err => {
+console.error('EmailJS error:', err);
+showMsg('authError1','❌ Erreur d\'envoi du code. Réessayez dans quelques instants ou contactez le support.');
+btn.innerHTML='📧 Recevoir le code'; btn.disabled=false;
+});
+}
+
+function showStep2(email) {
+document.getElementById('authStep1').style.display = 'none';
+document.getElementById('authStep2').style.display = 'block';
+document.getElementById('authStep2Email').textContent = email;
+document.getElementById('authOTP').value = '';
+setTimeout(() => document.getElementById('authOTP').focus(), 100);
+}
+
+function backToStep1() {
+document.getElementById('authStep2').style.display = 'none';
+document.getElementById('authStep1').style.display = 'block';
+clearAuthMsgs();
+try { sessionStorage.removeItem('hap_pending_otp'); } catch(e) {}
+}
+
+function resendOTP() {
+backToStep1();
+submitEmail();
+}
+
+async function submitOTP() {
+const code = document.getElementById('authOTP').value.trim();
+if(code.length !== 6 || !/^\d{6}$/.test(code)) {
+showMsg('authError2','Le code doit contenir exactement 6 chiffres.'); return;
+}
+
+let pending = null;
+try { pending = JSON.parse(sessionStorage.getItem('hap_pending_otp') || 'null'); } catch(e) {}
+
+if(!pending) {
+showMsg('authError2','Session expirée. Recommencez avec votre email.'); return;
+}
+
+if(Date.now() > pending.expiry) {
+showMsg('authError2','⏰ Code expiré. Demandez un nouveau code.');
+try { sessionStorage.removeItem('hap_pending_otp'); } catch(e) {}
+return;
+}
+
+pending.attempts = (pending.attempts || 0) + 1;
+if(pending.attempts > 5) {
+showMsg('authError2','❌ Trop de tentatives. Demandez un nouveau code.');
+try { sessionStorage.removeItem('hap_pending_otp'); } catch(e) {}
+return;
+}
+try { sessionStorage.setItem('hap_pending_otp', JSON.stringify(pending)); } catch(e) {}
+
+if(code !== pending.otp) {
+showMsg('authError2',`❌ Code incorrect. ${5 - pending.attempts} tentative${5-pending.attempts>1?'s':''} restante${5-pending.attempts>1?'s':''}.`);
+return;
+}
+
+const btn = document.getElementById('btnSubmitOTP');
+btn.innerHTML = '<span class="spinner"></span> Validation...'; btn.disabled = true;
+
+// Check session limit (max 2 sessions per email)
+const sessionCheck = await checkAndRegisterSession(pending.email);
+if(!sessionCheck.success) {
+showMsg('authError2', sessionCheck.message);
+btn.innerHTML='✅ Valider le code'; btn.disabled=false;
+return;
+}
+
+// Success — authenticate
 isAuthenticated = true;
-currentAuthEmail = email;
-sessionStorage.setItem('hap_auth', email);
+currentAuthEmail = pending.email;
+sessionStorage.setItem('hap_auth', pending.email);
+sessionStorage.setItem('hap_session_id', sessionCheck.sessionId);
+try { sessionStorage.removeItem('hap_pending_otp'); } catch(e) {}
 updateAuthBadge();
 
-const daysLeft = getDaysRemaining(email);
+const daysLeft = getDaysRemaining(pending.email);
 if(daysLeft !== null && daysLeft <= 7) {
-showMsg('authSuccess1',`✅ Email vérifié ! Accès activé. ⚠️ Votre abonnement expire dans ${daysLeft} jour${daysLeft>1?'s':''}.`);
+showMsg('authSuccess2',`✅ Connexion réussie ! ⚠️ Votre abonnement expire dans ${daysLeft} jour${daysLeft>1?'s':''}.`);
 } else {
-showMsg('authSuccess1','✅ Email vérifié ! Accès aux traitements activé.');
+showMsg('authSuccess2','✅ Connexion réussie !');
 }
-btn.innerHTML='🔓 Vérifier et débloquer'; btn.disabled=false;
+btn.innerHTML='✅ Valider le code'; btn.disabled=false;
 
-setTimeout(() => { closeAuthModal();  updateWelcomeMessage(); renderFormations(); if(currentStep===2) runDiagnosis(); }, 1000);
+setTimeout(() => { closeAuthModal(); updateWelcomeMessage(); renderFormations(); if(currentStep===2) runDiagnosis(); }, 1000);
 }
+
+// ── SESSION MANAGEMENT (max 2 sessions per email) ──
+async function checkAndRegisterSession(email) {
+try {
+if(!db) return { success: true, sessionId: 'offline_' + Date.now() };
+
+const { collection, getDocs, query, where, doc, setDoc, deleteDoc, orderBy, limit } = await import("https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js");
+const sessionsRef = collection(db, 'sessions');
+
+// Get all active sessions for this email (sorted by creation, oldest first)
+const q = query(sessionsRef, where('email', '==', email));
+const snapshot = await getDocs(q);
+
+// Filter out expired sessions (>30 days old) and sort by timestamp
+const now = Date.now();
+const activeSessions = [];
+snapshot.forEach(d => {
+const data = d.data();
+if(data.timestamp && (now - data.timestamp) < 30 * 86400000) {
+activeSessions.push({ id: d.id, ...data });
+}
+});
+activeSessions.sort((a, b) => a.timestamp - b.timestamp);
+
+// If 2 or more active sessions, remove the oldest one
+const MAX_SESSIONS = 2;
+while(activeSessions.length >= MAX_SESSIONS) {
+const oldest = activeSessions.shift();
+try { await deleteDoc(doc(db, 'sessions', oldest.id)); } catch(e) {}
+}
+
+// Create new session
+const sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
+const userAgent = (navigator.userAgent || 'unknown').slice(0, 200);
+await setDoc(doc(db, 'sessions', sessionId), {
+email: email,
+timestamp: now,
+userAgent: userAgent,
+createdAt: new Date().toISOString()
+});
+
+return { success: true, sessionId: sessionId };
+} catch(err) {
+console.error('Session check error:', err);
+// Fail open — allow login if Firestore is down
+return { success: true, sessionId: 'offline_' + Date.now() };
+}
+}
+
+async function validateCurrentSession() {
+// Called periodically to check if this session has been kicked out
+try {
+const sessionId = sessionStorage.getItem('hap_session_id');
+const email = currentAuthEmail;
+if(!sessionId || !email || !db) return true;
+if(sessionId.startsWith('offline_')) return true;
+
+const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js");
+const sessionDoc = await getDoc(doc(db, 'sessions', sessionId));
+
+if(!sessionDoc.exists()) {
+// Session was removed (kicked out by newer login elsewhere)
+revokeAuth('⚠️ Vous avez été déconnecté car votre compte est utilisé sur un autre appareil.');
+return false;
+}
+return true;
+} catch(e) { return true; }
+}
+// Check session every 5 minutes
+setInterval(() => { if(isAuthenticated) validateCurrentSession(); }, 5 * 60 * 1000);
 
 // ── LOCATION ──
 function updateRegions() {
