@@ -1,0 +1,45 @@
+{
+  "name": "AviaScan - Diagnostic Avicole",
+  "short_name": "AviaScan",
+  "description": "L'application de diagnostic avicole pour l'Afrique francophone. Diagnostic en 30 secondes, calendrier vaccinal, traitements bio et médicaments adaptés.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F0F4F8",
+  "theme_color": "#0B4F6C",
+  "lang": "fr",
+  "dir": "ltr",
+  "categories": ["medical", "education", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nouveau diagnostic",
+      "short_name": "Diagnostic",
+      "description": "Démarrer un diagnostic rapide",
+      "url": "/?action=diagnostic",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Calendrier vaccinal",
+      "short_name": "Vaccins",
+      "description": "Voir le calendrier vaccinal",
+      "url": "/?action=vaccins",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "prefer_related_applications": false
+}
