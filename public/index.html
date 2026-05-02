@@ -2,8 +2,38 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 <title>AviaScan by HORIZON AGRO-PASTORAL</title>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- 📱 PWA CONFIGURATION (Progressive Web App) -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<meta name="description" content="AviaScan - L'application de diagnostic avicole pour l'Afrique francophone. Diagnostic en 30 secondes, calendrier vaccinal, traitements bio et médicaments adaptés.">
+<meta name="theme-color" content="#0B4F6C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="AviaScan">
+<meta name="application-name" content="AviaScan">
+<meta name="msapplication-TileColor" content="#0B4F6C">
+<meta name="msapplication-tap-highlight" content="no">
+
+<!-- Manifest -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- Icons (using AviaScan brand colors) -->
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
+<link rel="shortcut icon" href="/favicon.ico">
+
+<!-- Open Graph (partages WhatsApp/Facebook) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="AviaScan - Diagnostic avicole intelligent pour l'Afrique">
+<meta property="og:description" content="Diagnostic en 30 secondes, calendrier vaccinal automatique, traitements bio africains. À partir de 2 500 FCFA/mois.">
+<meta property="og:image" content="/icon-512.png">
+<meta property="og:locale" content="fr_FR">
+
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://js.chariow.com/v1/widget.min.css">
 <script async src="https://js.chariow.com/v1/widget.min.js"></script>
@@ -1025,6 +1055,19 @@ Déjà abonné ? <a onclick="closePaymentModal();openAuthModal()">Se connecter a
 </div>
 
 <div class="container">
+<!-- PWA INSTALL BANNER -->
+<div id="pwaInstallBanner" style="display:none;background:linear-gradient(135deg,#0B4F6C,#1A7FA0);color:white;border-radius:var(--radius);padding:14px 18px;margin-bottom:16px;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 4px 16px rgba(11,79,108,0.25);">
+<div style="font-size:32px;line-height:1;">📱</div>
+<div style="flex:1;min-width:200px;">
+<div style="font-weight:700;font-size:15px;margin-bottom:2px;">Installer AviaScan sur votre téléphone</div>
+<div style="font-size:12px;opacity:0.95;line-height:1.4;">Accès rapide depuis l'écran d'accueil • Mode hors-ligne • Notifications</div>
+</div>
+<div style="display:flex;gap:8px;">
+<button onclick="installPWA()" style="background:#E8872A;color:white;border:none;border-radius:8px;padding:10px 18px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;">Installer</button>
+<button onclick="dismissPWABanner()" style="background:transparent;color:white;border:1px solid rgba(255,255,255,0.4);border-radius:8px;padding:10px 14px;font-size:13px;cursor:pointer;font-family:inherit;">Plus tard</button>
+</div>
+</div>
+
 <!-- ANNOUNCEMENT BANNER (driven by Google Sheet) -->
 <div class="announce-banner" id="announceBanner" onclick="handleAnnonceClick()">
 <button class="ab-close" onclick="event.stopPropagation();document.getElementById('announceBanner').style.display='none';">×</button>
@@ -1909,6 +1952,7 @@ Nous écrire sur WhatsApp
 <button class="hamburger-item" onclick="navFromMenu('vet')"><span class="hm-icon">📞</span> Annuaire véto</button>
 <button class="hamburger-item" onclick="navFromMenu('about')"><span class="hm-icon">🏢</span> À propos</button>
 <div style="height:1px;background:var(--border);margin:6px 0;"></div>
+<button class="hamburger-item" onclick="installPWA()" style="color:#0B4F6C;font-weight:700;"><span class="hm-icon">📱</span> Installer l'app</button>
 <button class="hamburger-item" onclick="shareApp()" style="color:#25D366;font-weight:700;"><span class="hm-icon">📤</span> Partager AviaScan</button>
 </div>
 
@@ -2292,6 +2336,37 @@ window.open(whatsappUrl, '_blank');
 showToast('📤 Partagez avec vos contacts éleveurs !');
 }
 
+// ── PWA INSTALL ────────────────────────────────────────
+async function installPWA() {
+if(!window.deferredInstallPrompt) {
+// iOS or browser without prompt support
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+if(isIOS) {
+alert('Pour installer AviaScan sur votre iPhone :\n\n1. Touchez le bouton Partager (carré avec flèche en bas)\n2. Faites défiler et touchez "Sur l\'écran d\'accueil"\n3. Touchez "Ajouter"');
+} else {
+alert('Pour installer AviaScan :\n\n1. Touchez le menu de votre navigateur (⋮)\n2. Choisissez "Ajouter à l\'écran d\'accueil" ou "Installer l\'application"');
+}
+return;
+}
+
+window.deferredInstallPrompt.prompt();
+const { outcome } = await window.deferredInstallPrompt.userChoice;
+console.log('[PWA] Choix utilisateur :', outcome);
+if(outcome === 'accepted') {
+showToast('🎉 Installation en cours...');
+}
+window.deferredInstallPrompt = null;
+const banner = document.getElementById('pwaInstallBanner');
+if(banner) banner.style.display = 'none';
+}
+
+function dismissPWABanner() {
+const banner = document.getElementById('pwaInstallBanner');
+if(banner) banner.style.display = 'none';
+try { localStorage.setItem('pwa_install_dismissed', '1'); } catch(e) {}
+showToast('Vous pourrez installer AviaScan plus tard depuis le menu');
+}
+
 // ── THEME (DARK MODE) ──────────────────────────────────
 function initTheme() {
 let savedTheme = null;
@@ -2318,6 +2393,45 @@ showToast(newTheme === 'dark' ? '🌙 Mode sombre activé' : '☀️ Mode clair 
 function init() {
 // Initialize theme from localStorage or system preference
 initTheme();
+
+// ─── PWA : Register Service Worker ───
+if('serviceWorker' in navigator) {
+window.addEventListener('load', () => {
+navigator.serviceWorker.register('/sw.js')
+.then(reg => {
+console.log('[PWA] Service Worker enregistré :', reg.scope);
+// Check for updates every hour
+setInterval(() => reg.update(), 3600000);
+})
+.catch(err => console.warn('[PWA] Erreur Service Worker :', err));
+});
+}
+
+// ─── PWA : Capture install prompt ───
+window.deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+e.preventDefault();
+window.deferredInstallPrompt = e;
+console.log('[PWA] Installation possible');
+// Show install banner after 30 seconds (if not dismissed before)
+const dismissed = localStorage.getItem('pwa_install_dismissed');
+if(!dismissed) {
+setTimeout(() => {
+const banner = document.getElementById('pwaInstallBanner');
+if(banner && !window.matchMedia('(display-mode: standalone)').matches) {
+banner.style.display = 'flex';
+}
+}, 30000);
+}
+});
+
+// ─── PWA : Detect if installed ───
+window.addEventListener('appinstalled', () => {
+console.log('[PWA] App installée !');
+showToast('🎉 AviaScan installée avec succès !');
+const banner = document.getElementById('pwaInstallBanner');
+if(banner) banner.style.display = 'none';
+});
 
 // Show notification banner if permission is default
 if('Notification' in window && Notification.permission === 'default') {
