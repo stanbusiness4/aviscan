@@ -280,7 +280,21 @@ border: 2px solid var(--primary); display: flex; align-items: center;
 justify-content: space-between; gap: 12px; z-index: 150; flex-wrap: wrap;
 max-width: calc(100% - 32px); backdrop-filter: blur(10px);
 animation: slideUpIn 0.3s ease;
+transition: all 0.3s ease;
 }
+
+/* Compact mode during search - shrinks to a small floating badge */
+.selected-bar-floating.search-mode {
+left: auto; right: 16px;
+max-width: 180px;
+padding: 8px 14px;
+border-radius: 50px;
+flex-wrap: nowrap;
+opacity: 0.92;
+}
+.selected-bar-floating.search-mode .selected-tags { display: none; }
+.selected-bar-floating.search-mode .btn { padding: 6px 14px; font-size: 12px; }
+.selected-bar-floating.search-mode .selected-count { font-size: 13px; }
 @keyframes slideUpIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 @media (min-width: 768px) { .selected-bar-floating { max-width: 800px; left: 50%; transform: translateX(-50%); } }
 .selected-bar-floating .selected-tags { max-height: 60px; overflow-y: auto; }
@@ -1272,7 +1286,7 @@ Déjà abonné ? <a onclick="closePaymentModal();openAuthModal()">Se connecter a
 
 <!-- SYMPTOM SEARCH BAR -->
 <div style="margin-bottom:14px;position:relative;">
-<input type="text" id="symptomSearch" placeholder="🔍 Rechercher un symptôme (ex: diarrhée, toux, boiterie...)" oninput="searchSymptoms()" style="width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:12px;font-size:14px;background:var(--card);color:var(--text);transition:border-color 0.2s;">
+<input type="text" id="symptomSearch" placeholder="🔍 Rechercher un symptôme (ex: diarrhée, toux, boiterie...)" oninput="searchSymptoms()" onfocus="onSymptomSearchFocus()" onblur="onSymptomSearchBlur()" style="width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:12px;font-size:14px;background:var(--card);color:var(--text);transition:border-color 0.2s;">
 </div>
 
 <!-- PROGRESS INDICATOR -->
@@ -3181,8 +3195,32 @@ function filterCat(cat,btn) { currentCat=cat; document.querySelectorAll('.cat-bt
 
 // Search symptoms across all categories
 function searchSymptoms() {
-const query = (document.getElementById('symptomSearch')?.value || '').toLowerCase().trim();
+const searchInput = document.getElementById('symptomSearch');
+const query = (searchInput?.value || '').toLowerCase().trim();
 renderSymptoms(query);
+// Auto-hide floating bar when there's a search to free up space for results
+const bar = document.getElementById('selectedBar');
+if(bar) {
+if(query.length > 0) {
+bar.classList.add('search-mode');
+} else {
+bar.classList.remove('search-mode');
+}
+}
+}
+
+// Hide floating bar when input is focused (mobile keyboard takes space)
+function onSymptomSearchFocus() {
+const bar = document.getElementById('selectedBar');
+if(bar) bar.classList.add('search-mode');
+}
+function onSymptomSearchBlur() {
+const bar = document.getElementById('selectedBar');
+const searchInput = document.getElementById('symptomSearch');
+// Only show again if search is empty
+if(bar && (!searchInput?.value || searchInput.value.length === 0)) {
+bar.classList.remove('search-mode');
+}
 }
 
 // Pre-select urgent/critical symptoms
