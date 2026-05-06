@@ -1113,7 +1113,7 @@ Déjà abonné ? <a onclick="closePaymentModal();openAuthModal()">Se connecter a
 <span id="authBadgeIcon">⭐</span>
 <span id="authBadgeText">S'abonner</span>
 </div>
-<div id="refreshBtn" onclick="refreshApp()" style="position:absolute;top:70px;right:24px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;transition:all 0.3s;font-size:16px;color:#fff;" title="Rafraîchir">🔄</div>
+
 </div>
 </div>
 
@@ -4096,18 +4096,14 @@ btn.disabled = false;
 
 // ── REFRESH APP ──────────────────────────────────
 function refreshApp() {
-const btn = document.getElementById('refreshBtn');
-if(btn) { btn.style.transform = 'rotate(360deg)'; setTimeout(() => btn.style.transform = '', 600); }
-showToast('🔄 Rafraîchissement...');
+// Function kept for backward compatibility but no longer triggered from UI
+// Kept in case future features need to call it programmatically
 appAvis = [];
 appFormations = { freeVideos: [], premiumVideos: [], freePdfs: [], premiumPdfs: [] };
 fetchFromGoogleSheet().then(() => {
 updateVideoEmbed(); updateAnnonce(); updateTestimonials(); generateQR(); updateSubPrices(); renderFormations();
 if(isAuthenticated) checkAuthStillValid();
-showToast('✅ Données mises à jour !');
-}).catch(() => {
-showToast('❌ Erreur de connexion');
-});
+}).catch(() => {});
 }
 
 // ── FORMATION PAGE ──────────────────────────────────
