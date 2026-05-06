@@ -523,6 +523,55 @@ text-decoration: none; -webkit-tap-highlight-color: transparent;
 .nav-item.active { color: var(--primary); }
 .nav-item .nav-icon { font-size: 20px; }
 .nav-item .nav-label { font-weight: 600; }
+
+/* ═══ CENTER FAB BUTTON (Diagnostic prominent) ═══ */
+.nav-item-fab {
+flex: 0 0 auto;
+position: relative;
+display: flex; flex-direction: column; align-items: center; gap: 2px;
+padding: 0 8px;
+border: none; background: none; font-family: inherit;
+font-size: 10px; color: var(--text-light); cursor: pointer;
+text-decoration: none; -webkit-tap-highlight-color: transparent;
+}
+.nav-item-fab .fab-circle {
+width: 56px; height: 56px; border-radius: 50%;
+background: linear-gradient(135deg, #E8872A 0%, #F5B041 100%);
+box-shadow: 0 4px 16px rgba(232, 135, 42, 0.45), 0 2px 6px rgba(232, 135, 42, 0.3);
+display: flex; align-items: center; justify-content: center;
+font-size: 28px; color: white;
+margin-top: -28px; margin-bottom: 4px;
+border: 4px solid var(--card);
+transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+position: relative;
+}
+.nav-item-fab:hover .fab-circle {
+transform: scale(1.08) translateY(-2px);
+box-shadow: 0 6px 20px rgba(232, 135, 42, 0.55), 0 3px 8px rgba(232, 135, 42, 0.35);
+}
+.nav-item-fab:active .fab-circle {
+transform: scale(0.95);
+}
+.nav-item-fab.active .fab-circle {
+background: linear-gradient(135deg, #D67821 0%, #E8872A 100%);
+box-shadow: 0 4px 20px rgba(232, 135, 42, 0.6), 0 0 0 4px rgba(232, 135, 42, 0.15);
+}
+.nav-item-fab .fab-label {
+font-weight: 700; color: var(--accent); font-size: 10px;
+}
+.nav-item-fab.active .fab-label {
+color: var(--accent);
+}
+
+/* Subtle pulse animation to attract attention initially */
+@keyframes fabPulse {
+0%, 100% { box-shadow: 0 4px 16px rgba(232, 135, 42, 0.45), 0 2px 6px rgba(232, 135, 42, 0.3), 0 0 0 0 rgba(232, 135, 42, 0.4); }
+50% { box-shadow: 0 4px 16px rgba(232, 135, 42, 0.45), 0 2px 6px rgba(232, 135, 42, 0.3), 0 0 0 12px rgba(232, 135, 42, 0); }
+}
+.nav-item-fab .fab-circle { animation: fabPulse 2.5s ease-in-out 3; }
+
+[data-theme="dark"] .nav-item-fab .fab-circle { border-color: var(--card); }
+
 .container { padding-bottom: 100px !important; }
 
 /* ═══ VACCINATION CALENDAR ═══ */
@@ -1961,10 +2010,6 @@ Nous écrire sur WhatsApp
 
 <!-- BOTTOM NAVIGATION (3 tabs + hamburger) -->
 <nav class="bottom-nav">
-<button class="nav-item active" onclick="switchPage('diagnostic',this)">
-<span class="nav-icon">🩺</span>
-<span class="nav-label">Diagnostic</span>
-</button>
 <button class="nav-item" onclick="switchPage('vax',this)">
 <span class="nav-icon">💉</span>
 <span class="nav-label">Vaccins</span>
@@ -1972,6 +2017,14 @@ Nous écrire sur WhatsApp
 <button class="nav-item" onclick="switchPage('formation',this)">
 <span class="nav-icon">🎓</span>
 <span class="nav-label">Formation</span>
+</button>
+<button class="nav-item-fab active" onclick="switchPage('diagnostic',this)" aria-label="Diagnostic">
+<span class="fab-circle">🩺</span>
+<span class="fab-label">Diagnostic</span>
+</button>
+<button class="nav-item" onclick="navFromMenu('history')">
+<span class="nav-icon">📋</span>
+<span class="nav-label">Historique</span>
 </button>
 <button class="nav-item" onclick="toggleHamburger()" id="hamburgerBtn">
 <span class="nav-icon">☰</span>
@@ -3742,15 +3795,15 @@ function switchPage(page, btn) {
 currentPage = page;
 closeHamburger();
 
-// Update bottom nav active state
-document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+// Update bottom nav active state (handles both .nav-item AND .nav-item-fab)
+document.querySelectorAll('.nav-item, .nav-item-fab').forEach(b => b.classList.remove('active'));
 if(btn) {
 btn.classList.add('active');
 } else {
 // Called from hamburger — highlight the correct fixed tab or hamburger btn
 const fixedPages = ['diagnostic','vax','formation'];
 if(fixedPages.includes(page)) {
-document.querySelectorAll('.nav-item').forEach(b => {
+document.querySelectorAll('.nav-item, .nav-item-fab').forEach(b => {
 if(b.getAttribute('onclick')?.includes("'" + page + "'")) b.classList.add('active');
 });
 } else {
